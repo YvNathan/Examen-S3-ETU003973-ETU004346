@@ -1,48 +1,58 @@
 CREATE DATABASE examenS3;
 USE examenS3;
 
-CREATE TABLE lvr_Vehicule(
+CREATE TABLE lvr_vehicule(
     id INT PRIMARY KEY ,
     modele VARCHAR(50) ,
     immatriculation VARCHAR(20)
 );
 
-CREATE TABLE lvr_Livreur (
+CREATE TABLE lvr_livreur (
     id INT PRIMARY KEY , 
     nom VARCHAR(50) ,
-    salairejournalier DECIMAL(10,2),
-    contact VARCHAR(20)
+    contact VARCHAR(20),
+    salaire_journalier DECIMAL(10,2)
 );
 
-CREATE TABLE lvr_Status (
+CREATE TABLE lvr_statut (
     id INT PRIMARY KEY,
-    description VARCHAR(50)
+    descrip VARCHAR(50)
 );
 
-CREATE TABLE lvr_Colis (
+
+CREATE TABLE lvr_colis (
     id INT PRIMARY KEY,
-    description VARCHAR(50),
-    poidsKg DECIMAL(10,2)
+    descrip VARCHAR(50),
+    destinataire VARCHAR(50),
+    poids_Kg DECIMAL(10,2)
 );
 
-CREATE TABLE lvr_Confprix(
+CREATE TABLE lvr_confprix(
     id INT PRIMARY KEY,
     prix DECIMAL(10,2),
     actif BOOLEAN
 );
 
-CREATE TABLE lvr_Livraison (
+CREATE TABLE lvr_affectation (
     id INT PRIMARY KEY,
-    idVehicule INT, 
-    idLivreur INT ,
+    idvehicule INT, 
+    idlivreur INT, 
+
+    FOREIGN KEY (idvehicule) REFERENCES lvr_vehicule(id),
+    FOREIGN KEY (idlivreur) REFERENCES lvr_livreur(id),
+
+)
+
+CREATE TABLE lvr_livraison (
+    id INT PRIMARY KEY,
+    idAffectation INT,
     idStatus INT,
     idColis INT ,
     adresseDepart VARCHAR(100),
     adresseDestination VARCHAR(100),
     date DATE,
     
-    FOREIGN KEY (idVehicule) REFERENCES lvr_Vehicule(id),
-    FOREIGN KEY (idLivreur) REFERENCES lvr_Livreur(id),
-    FOREIGN KEY (idStatus) REFERENCES lvr_Status(id),
-    FOREIGN KEY (idColis) REFERENCES lvr_Colis(id)
+    FOREIGN KEY (idAffectation) REFERENCES lvr_affectation(id),
+    FOREIGN KEY (idStatus) REFERENCES lvr_statut(id),
+    FOREIGN KEY (idColis) REFERENCES lvr_colis(id)
 );
