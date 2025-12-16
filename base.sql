@@ -10,8 +10,8 @@ CREATE TABLE lvr_vehicule(
 CREATE TABLE lvr_livreur (
     id INT PRIMARY KEY , 
     nom VARCHAR(50) ,
-    contact VARCHAR(20),
-    salaire_journalier DECIMAL(10,2)
+    contact VARCHAR(20)
+    
 );
 
 CREATE TABLE lvr_statut (
@@ -37,6 +37,8 @@ CREATE TABLE lvr_affectation (
     id INT PRIMARY KEY,
     idvehicule INT, 
     idlivreur INT, 
+    salaire_livreur DECIMAL(10,2),
+    cout_vehicule DECIMAL(10,2),
 
     FOREIGN KEY (idvehicule) REFERENCES lvr_vehicule(id),
     FOREIGN KEY (idlivreur) REFERENCES lvr_livreur(id),
