@@ -28,4 +28,4 @@ INSERT INTO lvr_colis (descrip, poids_kg, destinataire) VALUES
 ('Smartphones Android (20 unités)', 4.9, 'Rasoanaivo Lala');
 
 -- Conf
-INSERT INTO conf_prix (prix, actif) VALUES (5, true);
+INSERT INTO lvr_conf_prix (prix, actif) VALUES (5, true);
