@@ -26,3 +26,6 @@ INSERT INTO lvr_colis (descrip, poids_kg, destinataire) VALUES
 ('Machine à café professionnelle', 14.6, 'Raherison Paul'),
 ('Pièces détachées automobiles', 25.0, 'Ravelomanantsoa Thierry'),
 ('Smartphones Android (20 unités)', 4.9, 'Rasoanaivo Lala');
+
+-- Conf
+INSERT INTO conf_prix (prix, actif) VALUES (5, true);
