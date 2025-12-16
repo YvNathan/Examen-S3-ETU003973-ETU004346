@@ -11,9 +11,9 @@ INSERT INTO lvr_vehicule (modele, immatriculation) VALUES
 ('Mercedes Sprinter', '7891 TCA'),
 
 -- Livreurs
-INSERT INTO lvr_livreur (nom, salaire_journalier, contact) VALUES
-('Rakoto Jean', 10000, '034 12 345 67'),
-('Ratefy Paul', 12000, '033 98 765 43');
+INSERT INTO lvr_livreur (nom, contact) VALUES
+('Rakoto Jean', '034 12 345 67'),
+('Ratefy Paul', '033 98 765 43');
 
 -- Colis
 INSERT INTO lvr_colis (descrip, poids_kg, destinataire) VALUES
