@@ -22,4 +22,7 @@ INSERT INTO lvr_colis (descrip, poids_kg, destinataire) VALUES
 ('2 Imprimantes Laser HP', 22.0, 'Rajaonarivelo Hery'),
 ('Carton de vêtements (30 pièces)', 12.3, 'Randriamampionona Sarah'),
 ('Télévision LED 55 pouces', 16.8, 'Rabe Jean-Claude'),
-('Lot de livres scolaires', 9.4, 'Razafindrakoto Mireille');
+('Lot de livres scolaires', 9.4, 'Razafindrakoto Mireille'),
+('Machine à café professionnelle', 14.6, 'Raherison Paul'),
+('Pièces détachées automobiles', 25.0, 'Ravelomanantsoa Thierry'),
+('Smartphones Android (20 unités)', 4.9, 'Rasoanaivo Lala');
