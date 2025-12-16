@@ -12,24 +12,24 @@ CREATE TABLE lvr_Livreur (
     nom VARCHAR(50) ,
     salairejournalier DECIMAL(10,2),
     contact VARCHAR(20)
-)
+);
 
 CREATE TABLE lvr_Status (
     id INT PRIMARY KEY,
     description VARCHAR(50)
-)
+);
 
 CREATE TABLE lvr_Colis (
     id INT PRIMARY KEY,
     description VARCHAR(50),
     poidsKg DECIMAL(10,2)
-)
+);
 
 CREATE TABLE lvr_Confprix(
     id INT PRIMARY KEY,
     prix DECIMAL(10,2),
     actif BOOLEAN
-)
+);
 
 CREATE TABLE lvr_Livraison (
     id INT PRIMARY KEY,
@@ -45,4 +45,4 @@ CREATE TABLE lvr_Livraison (
     FOREIGN KEY (idLivreur) REFERENCES lvr_Livreur(id),
     FOREIGN KEY (idStatus) REFERENCES lvr_Status(id),
     FOREIGN KEY (idColis) REFERENCES lvr_Colis(id)
-)
+);
