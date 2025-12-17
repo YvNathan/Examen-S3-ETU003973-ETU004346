@@ -153,7 +153,7 @@ $$;
 
 
 ---Liste des colis disponibles
-CREATE OR REPLACE VIEW v_lvr_getColisDisponibles AS
+CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
 SELECT * FROM Colis 
 WHERE id NOT IN (SELECT idColis FROM Livraison);
 
