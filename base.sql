@@ -2,19 +2,19 @@ CREATE DATABASE examenS3;
 USE examenS3;
 
 CREATE TABLE lvr_zone(
-     id INT PRIMARY KEY ,
+     id INT PRIMARY KEY,
      nom VARCHAR(50)
 )
 
 CREATE TABLE lvr_vehicule(
-    id INT PRIMARY KEY ,
-    modele VARCHAR(50) ,
+    id INT PRIMARY KEY,
+    modele VARCHAR(50),
     immatriculation VARCHAR(20)
 );
 
 CREATE TABLE lvr_livreur (
-    id INT PRIMARY KEY , 
-    nom VARCHAR(100) ,
+    id INT PRIMARY KEY, 
+    nom VARCHAR(100),
     contact VARCHAR(20),
     salaire DECIMAL(10,2)
     
@@ -31,11 +31,8 @@ CREATE TABLE lvr_colis (
     descrip VARCHAR(100),
     destinataire VARCHAR(50),
     contact VARCHAR(50),
-    poids_Kg DECIMAL(10,2)
-    adrDestination VARCHAR(100), 
-    idZone INT,
-
-    FOREIGN KEY (idZone) REFERENCES lvr_zone(id)
+    poids_Kg DECIMAL(10,2),
+    adrDestination VARCHAR(100)
 );
 
 
@@ -55,7 +52,7 @@ CREATE TABLE lvr_livraison (
     idAffectation INT,
     idColis INT ,
     adresseDepart VARCHAR(100),
-    date DATE,
+    dateLivraison DATE,
     prixKg DECIMAL(10,2),
     
     FOREIGN KEY (idAffectation) REFERENCES lvr_affectation(id),
@@ -77,7 +74,7 @@ CREATE TABLE lvr_paiement(
      id INT PRIMARY KEY,
      prix DECIMAL(10,2),
      idLivraison INT,
-     date DATE,
+     datePaiement DATE,
 
      FOREIGN KEY (idLivraison) REFERENCES lvr_livraison(id)
 )
@@ -93,6 +90,73 @@ FROM lvr_livraisonStatut ls
 JOIN lvr_statut s      ON ls.idStatut = s.id
 JOIN lvr_livraison l    ON ls.idLivraison = l.id
 JOIN lvr_colis c        ON l.idColis = c.id;
+
+---Trigger insertion nouveau statut au moment de la création d'une nouvelle livraison--
+CREATE OR REPLACE FUNCTION fn_lvr_new_livraison_statut()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO lvr_livraisonStatut (IdLivraison, IdStatut, DateStatut)
+    VALUES (NEW.id, 1, NEW.dateLivraison); 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_lvr_new_livraison
+AFTER INSERT ON lvr_livraison
+FOR EACH ROW
+EXECUTE FUNCTION fn_lvr_new_livraison_statut();
+
+---Procedure pour engendrer une livraison--
+CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
+    p_idVehicule INT,
+    p_idLivreur INT,
+    p_coutVehicule DECIMAL,
+    p_idColis INT,
+    p_prixKg DECIMAL,
+    p_dateLivraison DATE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_idAffectation INT;
+BEGIN
+    --verification de la disponibilite du colis
+    IF EXISTS (SELECT 1 FROM lvr_livraison WHERE idColis = p_idColis) THEN
+        RAISE EXCEPTION 'Le colis % est déjà associé à une livraison.', p_idColis;
+    END IF;
+
+    --verification des montants
+    IF p_coutVehicule < 0 OR p_prixKg < 0 THEN
+        RAISE EXCEPTION 'Les montants ne peuvent pas être négatifs.';
+    END IF;
+
+    --insert affectation
+    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule)
+    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule)
+    RETURNING id INTO v_idAffectation;
+
+    --insert new livraison
+    INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg)
+    VALUES (v_idAffectation, p_idColis, 'Entrepôt Central', p_dateLivraison, p_prixKg);
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Erreur lors de la création de la livraison : %', SQLERRM;
+        ROLLBACK;
+        RAISE;
+
+    RAISE NOTICE 'Nouvelle livraison créé pour le colis %', p_idColis;
+
+
+END;
+$$;
+
+
+---Liste des colis disponibles
+CREATE OR REPLACE VIEW v_lvr_getColisDisponibles AS
+SELECT * FROM Colis 
+WHERE id NOT IN (SELECT idColis FROM Livraison);
+
 
 
 ---Procedure pour la confirmation de livraison--
@@ -132,7 +196,7 @@ BEGIN
     prixTotal := prixKg * poids_Kg;
 
     -- Insert dans paiement
-    INSERT INTO lvr_paiement (idLivraison, prix, date)
+    INSERT INTO lvr_paiement (idLivraison, prix, datePaiement)
     VALUES (p_idLivraison, prixTotal, p_datePaiement);
 
     -- Mise à jour du statut
