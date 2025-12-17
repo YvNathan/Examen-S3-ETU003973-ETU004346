@@ -81,3 +81,59 @@ CREATE TABLE lvr_paiement(
 
      FOREIGN KEY (idLivraison) REFERENCES lvr_livraison(id)
 )
+
+
+
+CREATE OR REPLACE PROCEDURE p_gestion_statut (
+    p_idLivraison INT,
+    p_datePaiement DATE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    prixKg    DECIMAL(10,2);
+    poids_Kg  DECIMAL(10,2);
+    prixTotal DECIMAL(10,2);
+BEGIN
+    --Verifie que Livraison est en attente pour ce livraison 
+    IF NOT EXISTS (
+        SELECT 1
+        FROM lvr_livraisonStatut
+        WHERE idLivraison = p_idLivraison
+          AND idStatut = 1
+    ) THEN
+        RAISE EXCEPTION 'Livraison % inexistante ou non en cours', p_idLivraison;
+    END IF;
+
+    -- Récupération des données de livraison
+    SELECT l.prixKg, c.poids_Kg
+    INTO prixKg, poids_Kg
+    FROM lvr_livraison l
+    JOIN lvr_colis c ON c.id = l.idColis
+    WHERE l.id = p_idLivraison;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Données manquantes pour la livraison %', p_idLivraison;
+    END IF;
+
+    -- Calcul du prix total
+    prixTotal := prixKg * poids_Kg;
+
+    -- Insert dans paiement
+    INSERT INTO lvr_paiement (idLivraison, prix, date)
+    VALUES (p_idLivraison, prixTotal, p_datePaiement);
+
+    -- Mise à jour du statut → livré (idStatut = 2)
+    UPDATE lvr_livraisonStatut
+    SET idStatut = 2,
+        dateStatut = p_datePaiement
+    WHERE idLivraison = p_idLivraison;
+
+END;
+$$;
+
+
+
+
+  
+  
