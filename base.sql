@@ -82,8 +82,20 @@ CREATE TABLE lvr_paiement(
      FOREIGN KEY (idLivraison) REFERENCES lvr_livraison(id)
 )
 
+---selection de tout les statut de livraison---
+CREATE OR REPLACE VIEW v_getStatusLivraison AS
+SELECT 
+    c.descrip,
+    ls.dateStatut,
+    c.adrDestination,
+    s.descrip AS statut
+FROM lvr_livraisonStatut ls
+JOIN lvr_statut s      ON ls.idStatut = s.id
+JOIN lvr_livraison l    ON ls.idLivraison = l.id
+JOIN lvr_colis c        ON l.idColis = c.id;
 
 
+---Procedure pour la confirmation de livraison--
 CREATE OR REPLACE PROCEDURE p_gestion_statut (
     p_idLivraison INT,
     p_datePaiement DATE
@@ -105,7 +117,7 @@ BEGIN
         RAISE EXCEPTION 'Livraison % inexistante ou non en cours', p_idLivraison;
     END IF;
 
-    -- Récupération des données de livraison
+    -- Récup des données de livraison
     SELECT l.prixKg, c.poids_Kg
     INTO prixKg, poids_Kg
     FROM lvr_livraison l
@@ -123,7 +135,7 @@ BEGIN
     INSERT INTO lvr_paiement (idLivraison, prix, date)
     VALUES (p_idLivraison, prixTotal, p_datePaiement);
 
-    -- Mise à jour du statut → livré (idStatut = 2)
+    -- Mise à jour du statut
     UPDATE lvr_livraisonStatut
     SET idStatut = 2,
         dateStatut = p_datePaiement

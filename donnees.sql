@@ -1,31 +1,36 @@
--- Statuts
-INSERT INTO lvr_statut (`desc`) VALUES
-('en attente'),
-('livré'),
-('annulé');
 
--- Véhicules
-INSERT INTO lvr_vehicule (modele, immatriculation) VALUES
-('Renault Kangoo', '1234 TBA'),
-('Peugeot Partner', '4567 TBD'),
-('Mercedes Sprinter', '7891 TCA'),
+-- ZONES
+INSERT INTO lvr_zone (id, nom) VALUES
+(1, 'Centre-ville'),
+(2, 'Analamanga'),
+(3, 'Androy');
 
--- Livreurs
-INSERT INTO lvr_livreur (nom, contact) VALUES
-('Rakoto Jean', '034 12 345 67'),
-('Ratefy Paul', '033 98 765 43');
+-- VEHICULES
+INSERT INTO lvr_vehicule (id, modele, immatriculation) VALUES
+(1, 'Toyota Hilux', '1234-TAB'),
+(2, 'Nissan NV200', '5678-TBC'),
+(3, 'Suzuki Carry', '9012-TBD');
 
--- Colis
-INSERT INTO lvr_colis (descrip, poids_kg, destinataire) VALUES
-('3 Macbook Pro M5', 6.2, 'Rasoarilalao Kanto'),
-('5 iPhone 17 Pro Max', 1.5, 'Rarivoarison Joseph'),
-('2 Imprimantes Laser HP', 22.0, 'Rajaonarivelo Hery'),
-('Carton de vêtements (30 pièces)', 12.3, 'Randriamampionona Sarah'),
-('Télévision LED 55 pouces', 16.8, 'Rabe Jean-Claude'),
-('Lot de livres scolaires', 9.4, 'Razafindrakoto Mireille'),
-('Machine à café professionnelle', 14.6, 'Raherison Paul'),
-('Pièces détachées automobiles', 25.0, 'Ravelomanantsoa Thierry'),
-('Smartphones Android (20 unités)', 4.9, 'Rasoanaivo Lala');
+-- LIVREURS
+INSERT INTO lvr_livreur (id, nom, contact, salaire) VALUES
+(1, 'Rakoto Jean', '0341234567', 450000),
+(2, 'Rabe Paul', '0329876543', 400000),
+(3, 'Andry Marc', '0334567890', 420000);
 
--- Conf
-INSERT INTO lvr_conf_prix (prix, actif) VALUES (5, true);
+-- STATUTS
+INSERT INTO lvr_statut (id, descrip) VALUES
+(1, 'En attente'),
+(2, 'En cours de livraison'),
+(3, 'Livré');
+
+-- COLIS
+INSERT INTO lvr_colis (id, descrip, destinataire, contact, poids_Kg, adrDestination, idZone) VALUES
+(1, 'Documents', 'Société ABC', '0348512301', 2.50, 'IB102', 1),
+(2, 'Matériel informatique', 'Entreprise XYZ', '0345689213', 5.00, 'IV001', 2),
+(3, 'Vêtements', 'Client Particulier', '0332540157', 3.20, 'IB09', 3);
+
+
+
+
+
+
