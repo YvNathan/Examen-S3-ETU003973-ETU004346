@@ -2,18 +2,18 @@ CREATE DATABASE examenS3;
 USE examenS3;
 
 CREATE TABLE lvr_zone(
-     id INT PRIMARY KEY,
+     id SERIAL PRIMARY KEY,
      nom VARCHAR(50)
 )
 
 CREATE TABLE lvr_vehicule(
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     modele VARCHAR(50),
     immatriculation VARCHAR(20)
 );
 
 CREATE TABLE lvr_livreur (
-    id INT PRIMARY KEY, 
+    id SERIAL PRIMARY KEY, 
     nom VARCHAR(100),
     contact VARCHAR(20),
     salaire DECIMAL(10,2)
@@ -21,13 +21,13 @@ CREATE TABLE lvr_livreur (
 );
 
 CREATE TABLE lvr_statut (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     descrip VARCHAR(100)
 );
 
 
 CREATE TABLE lvr_colis (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     descrip VARCHAR(100),
     destinataire VARCHAR(50),
     contact VARCHAR(50),
@@ -37,7 +37,7 @@ CREATE TABLE lvr_colis (
 
 
 CREATE TABLE lvr_affectation (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     idVehicule INT, 
     idLivreur INT, 
     coutVehicule DECIMAL(10,2),
@@ -48,7 +48,7 @@ CREATE TABLE lvr_affectation (
 )
 
 CREATE TABLE lvr_livraison (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     idAffectation INT,
     idColis INT ,
     adresseDepart VARCHAR(100),
@@ -60,7 +60,7 @@ CREATE TABLE lvr_livraison (
 );
 
 CREATE TABLE lvr_livraisonStatut(
-     id INT PRIMARY KEY,
+     id SERIAL PRIMARY KEY,
      idLivraison INT,
      idStatut INT,
      dateStatut DATE, 
@@ -71,7 +71,7 @@ CREATE TABLE lvr_livraisonStatut(
 )
 
 CREATE TABLE lvr_paiement(
-     id INT PRIMARY KEY,
+     id SERIAL PRIMARY KEY,
      prix DECIMAL(10,2),
      idLivraison INT,
      datePaiement DATE,
