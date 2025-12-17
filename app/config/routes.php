@@ -14,6 +14,10 @@ use flight\net\Router;
 
 $router->group('', function (Router $router) use ($app) {
 
+	$router->get('/', function () use ($app) {
+		$app->render('index');
+	});
+
 	$router->get('/statut', function () use ($app) {
 		$statutcontroller = new StatutController($app);
 		$statutcontroller->getStatutLivraison();
