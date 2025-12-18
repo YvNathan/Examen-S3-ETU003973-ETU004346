@@ -79,7 +79,7 @@
 
 <header class="topbar">
     <div class="topbar__inner">
-        <div class="topbar__brand"><a href="<?= $base ?: '/' ?>">Rojo Logistique</a></div>
+        <div class="topbar__brand"><a href="<?= $base ?: '/app' ?>">Rojo Logistique</a></div>
         <nav class="topbar__actions">
             <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
             <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
@@ -90,7 +90,7 @@
 <div class="app-grid">
     <aside class="sidebar">
         <div class="sidebar__title">Navigation</div>
-        <a class="sidebar__link" href="<?= $base ?: '/' ?>">Accueil</a>
+        <a class="sidebar__link" href="<?= $base ?: '/app' ?>">Accueil</a>
         <a class="sidebar__link is-active" href="<?= $base ?>/statut">Statuts des livraisons</a>
         <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
