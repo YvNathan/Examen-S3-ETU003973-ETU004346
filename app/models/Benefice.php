@@ -67,6 +67,32 @@ class Benefice
         );
     }
 
+    /**
+     * Calcule les totaux à partir d'un tableau de bénéfices
+     */
+    public function calculerTotaux($benefices)
+    {
+        $totaux = [
+            'nb_livraisons' => 0,
+            'ca_total' => 0,
+            'cout_total' => 0,
+            'benefice' => 0
+        ];
+
+        if (empty($benefices)) {
+            return $totaux;
+        }
+
+        foreach ($benefices as $row) {
+            $totaux['nb_livraisons'] += $row['nb_livraisons'] ?? 0;
+            $totaux['ca_total'] += $row['ca_total'] ?? 0;
+            $totaux['cout_total'] += $row['cout_total'] ?? 0;
+            $totaux['benefice'] += $row['benefice'] ?? 0;
+        }
+
+        return $totaux;
+    }
+
     private function execute($sql, $params = [])
     {
         $stmt = $this->db->prepare($sql);

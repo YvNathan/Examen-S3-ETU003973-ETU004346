@@ -87,6 +87,12 @@
             color: #333;
         }
 
+        tfoot td {
+            background: #e8f5e9;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
         .empty {
             padding: 12px;
             background: #fffbe6;
@@ -175,7 +181,7 @@
                         <div class="filter-group">
                             <label>Mois</label>
                             <select name="mois">
-                                <option value="">-- Tous --</option>
+                                <option value="">-- Choisir --</option>
                                 <?php for ($m = 1; $m <= 12; $m++): ?>
                                     <option value="<?= $m ?>" <?= ($mois ?? '') == $m ? 'selected' : '' ?>>
                                         <?= $m ?>
@@ -185,9 +191,9 @@
                         </div>
 
                         <div class="filter-group">
-                            <label>Jour (1–31)</label>
+                            <label>Jour</label>
                             <select name="jour">
-                                <option value="">-- Tous --</option>
+                                <option value="">-- Choisir --</option>
                                 <?php for ($d = 1; $d <= 31; $d++): ?>
                                     <option value="<?= $d ?>" <?= ($jour ?? '') == $d ? 'selected' : '' ?>>
                                         <?= $d ?>
@@ -221,7 +227,6 @@
                             </tr>
                         </thead>
 
-
                         <tbody>
                             <?php foreach ($benefices as $row): ?>
                                 <tr>
@@ -242,6 +247,21 @@
                             <?php endforeach; ?>
                         </tbody>
 
+                        <tfoot>
+                            <tr>
+                                <?php if ($affichage === 'date'): ?>
+                                    <td>TOTAL</td>
+                                <?php elseif ($affichage === 'mois'): ?>
+                                    <td colspan="2">TOTAL</td>
+                                <?php else: ?>
+                                    <td>TOTAL</td>
+                                <?php endif; ?>
+                                <td><?= number_format($totaux['nb_livraisons'] ?? 0) ?></td>
+                                <td><?= number_format($totaux['ca_total'] ?? 0, 2) ?> €</td>
+                                <td><?= number_format($totaux['cout_total'] ?? 0, 2) ?> €</td>
+                                <td><?= number_format($totaux['benefice'] ?? 0, 2) ?> €</td>
+                            </tr>
+                        </tfoot>
                     </table>
 
                 <?php else : ?>
