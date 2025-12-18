@@ -149,6 +149,75 @@ JOIN lvr_statut s      ON ls.idStatut = s.id
 JOIN lvr_livraison l    ON ls.idLivraison = l.id
 JOIN lvr_colis c        ON l.idColis = c.id;
 
+<<<<<<< HEAD
+=======
+---Trigger insertion nouveau statut au moment de la création d'une nouvelle livraison--
+CREATE OR REPLACE FUNCTION fn_lvr_new_livraison_statut()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO lvr_livraisonStatut (IdLivraison, IdStatut, DateStatut)
+    VALUES (NEW.id, 1, NEW.dateLivraison); 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_lvr_new_livraison
+AFTER INSERT ON lvr_livraison
+FOR EACH ROW
+EXECUTE FUNCTION fn_lvr_new_livraison_statut();
+
+---Procedure pour engendrer une livraison--
+CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
+    p_idVehicule INT,
+    p_idLivreur INT,
+    p_coutVehicule DECIMAL,
+    p_idColis INT,
+    p_prixKg DECIMAL,
+    p_dateLivraison DATE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_idAffectation INT;
+BEGIN
+    --verification de la disponibilite du colis
+    IF EXISTS (SELECT 1 FROM lvr_livraison WHERE idColis = p_idColis) THEN
+        RAISE EXCEPTION 'Le colis % est déjà associé à une livraison.', p_idColis;
+    END IF;
+
+    --verification des montants
+    IF p_coutVehicule < 0 OR p_prixKg < 0 THEN
+        RAISE EXCEPTION 'Les montants ne peuvent pas être négatifs.';
+    END IF;
+
+    --insert affectation
+    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule)
+    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule)
+    RETURNING id INTO v_idAffectation;
+
+    --insert new livraison
+    INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg)
+    VALUES (v_idAffectation, p_idColis, 'Entrepôt Central', p_dateLivraison, p_prixKg);
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Erreur lors de la création de la livraison : %', SQLERRM;
+        ROLLBACK;
+        RAISE;
+
+    RAISE NOTICE 'Nouvelle livraison créé pour le colis %', p_idColis;
+
+
+END;
+$$;
+
+
+---Liste des colis disponibles
+CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
+SELECT * FROM lcr_colis 
+WHERE id NOT IN (SELECT idColis FROM lvr_livraison);
+
+>>>>>>> d82dee14f0d9e09832b2f2bfc57cd6127d93e5e5
 
 
 ---Procedure pour la confirmation de livraison--

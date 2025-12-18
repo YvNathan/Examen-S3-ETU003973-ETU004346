@@ -1,0 +1,59 @@
+<?php
+
+namespace app\controllers;
+
+use flight\Engine;
+use app\models\Vehicules;
+use app\models\Livreurs;
+use app\models\Colis;
+use app\models\Livraison;
+use Flight;
+
+class LivraisonController
+{
+    protected Engine $app;
+
+    public function __construct($app)
+    {
+        $this->app = $app;
+    }
+
+    public function nouveau()
+    {
+        $modelV = new Vehicules($this->app->db());
+        $modelL = new Livreurs($this->app->db());
+        $modelC = new Colis($this->app->db());
+
+        $data = [
+            'vehicules' => $modelV->getVehicules(),
+            'livreurs'  => $modelL->getLivreurs(),
+            'colis'     => $modelC->getColisDisponibles(),
+        ];
+
+        $this->app->render('form', $data);
+    }
+
+    public function enregistrer()
+    {
+        $req = $this->app->request()->data;
+        $modelLivraison = new Livraison($this->app->db());
+
+        try {
+            $modelLivraison->creer(
+                $req->idVehicule,
+                $req->idLivreur,
+                $req->coutVehicule,
+                $req->idColis,
+                $req->prixKg,
+                $req->dateLivraison
+            );
+
+            $this->app->redirect('/livraisons?success=1');
+
+        } catch (\Exception $e) {
+            Flight::render('livraison/formulaire', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+}
