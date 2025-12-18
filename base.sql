@@ -138,7 +138,7 @@ DELIMITER ;
 
 
 ---selection de tout les statut de livraison---
-CREATE VIEW v_getStatusLivraison AS
+CREATE OR REPLACE VIEW v_getStatusLivraison AS
 SELECT 
     l.id AS idLivraison,
     c.descrip,
@@ -146,9 +146,14 @@ SELECT
     c.adrDestination,
     s.descrip AS statut
 FROM lvr_livraisonStatut ls
-JOIN lvr_statut s      ON ls.idStatut = s.id
-JOIN lvr_livraison l    ON ls.idLivraison = l.id
-JOIN lvr_colis c        ON l.idColis = c.id ;
+JOIN lvr_statut s ON ls.idStatut = s.id
+JOIN lvr_livraison l ON ls.idLivraison = l.id
+JOIN lvr_colis c ON l.idColis = c.id
+WHERE ls.dateStatut = (
+    SELECT MAX(ls2.dateStatut)
+    FROM lvr_livraisonStatut ls2
+    WHERE ls2.idLivraison = l.id
+);
 
 
 ---Trigger insertion nouveau statut au moment de la création d'une nouvelle livraison--
@@ -165,6 +170,8 @@ CREATE TRIGGER trg_lvr_new_livraison
 AFTER INSERT ON lvr_livraison
 FOR EACH ROW
 EXECUTE FUNCTION fn_lvr_new_livraison_statut();
+
+
 
 ---Procedure pour engendrer une livraison--
 CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
@@ -206,16 +213,18 @@ BEGIN
         RAISE;
 
     RAISE NOTICE 'Nouvelle livraison créé pour le colis %', p_idColis;
-
-
 END;
 $$;
+
+
 
 
 ---Liste des colis disponibles
 CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
 SELECT * FROM lvr_colis 
 WHERE id NOT IN (SELECT idColis FROM lvr_livraison);
+
+
 
 ---Procedure pour la confirmation de livraison--
 DELIMITER //
@@ -260,6 +269,7 @@ BEGIN
     VALUES (p_idLivraison, 2, p_datePaiement);
 END//
 DELIMITER ;
+
 
 
  --Annule livraison 
