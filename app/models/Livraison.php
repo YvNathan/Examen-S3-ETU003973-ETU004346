@@ -16,7 +16,7 @@ class Livraison
     public function creer($idVehicule, $idLivreur, $coutVehicule, $coutLivreur, $idColis, $prixKg, $dateLivraison)
     {
         try {
-            $sql = "CALL p_lvr_new_livraison(?, ?, ?, ?, ?, ?)";
+            $sql = "CALL p_lvr_new_livraison(?, ?, ?, ?, ?, ?, ?)";
             $stmt = $this->db->prepare($sql);
             
             return $stmt->execute([
