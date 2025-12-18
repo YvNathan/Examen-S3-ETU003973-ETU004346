@@ -134,9 +134,37 @@
         }
     </style>
 </head>
-<body>
+<body class="app-shell">
+<?php
+    $base = rtrim($baseUrl ?? '', '/');
+    if ($base === '/') {
+        $base = '';
+    }
+?>
+
+<header class="topbar">
+    <div class="topbar__inner">
+        <div class="topbar__brand"><a href="<?= $base ?: '/' ?>">Rojo Logistique</a></div>
+        <nav class="topbar__actions">
+            <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
+            <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
+        </nav>
+    </div>
+</header>
+
+<div class="app-grid">
+    <aside class="sidebar">
+        <div class="sidebar__title">Navigation</div>
+        <a class="sidebar__link" href="<?= $base ?: '/' ?>">Accueil</a>
+        <a class="sidebar__link" href="<?= $base ?>/statut">Statuts des livraisons</a>
+        <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
+        <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
+        <a class="sidebar__link is-active" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+    </aside>
+
+    <main class="page">
 <div class="container">
-    <a href="<?= htmlspecialchars($baseUrl ?? '/') ?>/benefices" class="back-link">← Retour au rapport</a>
+    <a href="<?= $base ?>/benefices" class="back-link">← Retour au rapport</a>
 
     <div class="page-header">
         <h1>📋 Détails complets des livraisons</h1>
@@ -250,6 +278,8 @@
     </div>
     <?php endif; ?>
 
+</div>
+    </main>
 </div>
 </body>
 </html>

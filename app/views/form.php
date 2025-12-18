@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nouvelle livraison</title>
+<link rel="stylesheet" href="/assets/styles.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; padding: 20px; }
+body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; padding: 0; }
 .container { max-width: 1200px; margin: 0 auto; }
 h2 { font-size: 24px; margin-bottom: 10px; }
 .back-link { color: #0066cc; text-decoration: none; display: inline-block; margin-bottom: 20px; font-size: 14px; }
@@ -35,10 +36,39 @@ td { padding: 12px; border: 1px solid #ddd; font-size: 14px; }
 @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
-<body>
-<div class="container">
-  <h2>Nouvelle livraison</h2>
-  <p><a href="<?= htmlspecialchars($baseUrl ?? '/') ?>" class="back-link">← Retour à l'accueil</a></p>
+<body class="app-shell">
+<?php
+  $base = rtrim($baseUrl ?? '', '/');
+  if ($base === '/') {
+      $base = '';
+  }
+  $base = htmlspecialchars($base, ENT_QUOTES);
+?>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="topbar__brand"><a href="<?= $base ?: '/' ?>">Rojo Logistique</a></div>
+    <nav class="topbar__actions">
+      <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
+      <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
+    </nav>
+  </div>
+</header>
+
+<div class="app-grid">
+  <aside class="sidebar">
+    <div class="sidebar__title">Navigation</div>
+    <a class="sidebar__link" href="<?= $base ?: '/' ?>">Accueil</a>
+    <a class="sidebar__link" href="<?= $base ?>/statut">Statuts des livraisons</a>
+    <a class="sidebar__link is-active" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
+    <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
+    <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+  </aside>
+
+  <main class="page">
+    <div class="container">
+      <h2>Nouvelle livraison</h2>
+      <p><a href="<?= $base ?: '/' ?>" class="back-link">← Retour à l'accueil</a></p>
   
   <?php if (!empty($error)) : ?>
   <div class="alert alert-error">
@@ -52,7 +82,7 @@ td { padding: 12px; border: 1px solid #ddd; font-size: 14px; }
   </div>
   <?php endif; ?>
   
-  <form action="/livraisons/nouveau" method="post">
+  <form action="<?= $base ?>/livraisons/nouveau" method="post">
     <div class="section">
       <div class="section-title">ENTÊTE</div>
       <div class="form-grid">
@@ -131,6 +161,10 @@ td { padding: 12px; border: 1px solid #ddd; font-size: 14px; }
 
     <button type="submit" class="submit-btn">Enregistrer</button>
   </form>
+</div>
+
+    </div>
+  </main>
 </div>
 
 <script>
