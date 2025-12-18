@@ -23,16 +23,28 @@ class BeneficeController
         $mois  = $_GET['mois'] ?? null;
         $jour  = $_GET['jour'] ?? null;
 
+        if ($jour) {
+            $affichage = 'date';
+        } elseif ($annee && $mois) {
+            $affichage = 'mois';
+        } elseif ($annee) {
+            $affichage = 'annee';
+        } else {
+            $affichage = 'date';
+        }
+
         $benefices = $model->getBeneficesParPeriode($annee, $mois, $jour);
 
         $this->app->render('benefices', [
             'benefices' => $benefices,
-            'annee'     => $annee,
-            'mois'      => $mois,
-            'jour'      => $jour,
-            'baseUrl'   => Flight::get('flight.base_url'),
+            'annee' => $annee,
+            'mois' => $mois,
+            'jour' => $jour,
+            'affichage' => $affichage,
+            'baseUrl' => Flight::get('flight.base_url'),
         ]);
     }
+
 
     public function details()
     {

@@ -27,6 +27,7 @@
             padding: 0.65rem 0.5rem;
             text-align: left;
             border: 1px solid #ddd;
+            color: #333;
         }
 
         th {

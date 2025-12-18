@@ -263,19 +263,19 @@ GROUP BY annee
 ORDER BY annee DESC;
 
 
-CREATE OR REPLACE VIEW v_lvr_benefices_periode AS
+CREATE OR REPLACE VIEW v_lvr_benefices_date AS
 SELECT
-    YEAR(dateLivraison)  AS annee,
+    DATE(dateLivraison) AS date,
+    YEAR(dateLivraison) AS annee,
     MONTH(dateLivraison) AS mois,
-    DAY(dateLivraison)   AS jour,
-
+    DAY(dateLivraison) AS jour,
     COUNT(*) AS nb_livraisons,
     SUM(IFNULL(chiffreAffaires, 0)) AS ca_total,
     SUM(coutLivreur + coutVehicule) AS cout_total,
-    (SUM(IFNULL(chiffreAffaires, 0)) 
-     - SUM(coutLivreur + coutVehicule)) AS benefice
+    (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
 FROM v_lvr_benefices
-GROUP BY annee, mois, jour;
+GROUP BY DATE(dateLivraison);
+
 
 
 
