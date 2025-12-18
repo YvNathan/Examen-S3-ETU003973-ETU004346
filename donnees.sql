@@ -35,10 +35,9 @@ INSERT INTO lvr_statut (descrip) VALUES
    COLIS
 ========================= */
 INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination) VALUES
-('Colis A', 'Alice', '0341111222', 10.5, '12 Rue Centrale, Zone Nord'),
-('Colis B', 'Bob', '0343333444', 5.0, '45 Avenue Sud, Zone Sud'),
-('Colis C', 'Charlie', '0345555666', 12.0, '78 Boulevard Est, Zone Est'),
-('Colis D', 'David', '0347777888', 7.5, '90 Rue Ouest, Zone Ouest');
+('Colis E', 'Eve', '0349999000', 8.0, '23 Rue Nouvelle, Zone Est'),
+('Colis F', 'Frank', '0341122334', 15.0, '56 Avenue Centrale, Zone Nord');
+
 
 /* =========================
    AFFECTATIONS

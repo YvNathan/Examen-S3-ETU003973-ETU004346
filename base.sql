@@ -1,14 +1,13 @@
-
+DROP DATABASE examenS3;
 CREATE DATABASE examenS3;
 USE examenS3;
 
-
-CREATE TABLE lvr_zone(
+CREATE TABLE lvr_zone (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50)
 );
 
-CREATE TABLE lvr_vehicule(
+CREATE TABLE lvr_vehicule (
     id INT AUTO_INCREMENT PRIMARY KEY,
     modele VARCHAR(50),
     immatriculation VARCHAR(20)
@@ -18,7 +17,7 @@ CREATE TABLE lvr_livreur (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     contact VARCHAR(20),
-    salaire DECIMAL(10,2)
+    salaire DECIMAL(10,2)  -- Salaire mensuel de base du livreur (info générale)
 );
 
 CREATE TABLE lvr_statut (
@@ -35,11 +34,13 @@ CREATE TABLE lvr_colis (
     adrDestination VARCHAR(100)
 );
 
+-- Table modifiée : ajout du coût du livreur par livraison
 CREATE TABLE lvr_affectation (
     id INT AUTO_INCREMENT PRIMARY KEY,
     idVehicule INT,
     idLivreur INT,
     coutVehicule DECIMAL(10,2),
+    coutLivreur DECIMAL(10,2) NOT NULL DEFAULT 0.00,  -- Coût réel du livreur pour cette livraison
     FOREIGN KEY (idVehicule) REFERENCES lvr_vehicule(id),
     FOREIGN KEY (idLivreur) REFERENCES lvr_livreur(id)
 );
@@ -55,7 +56,7 @@ CREATE TABLE lvr_livraison (
     FOREIGN KEY (idColis) REFERENCES lvr_colis(id)
 );
 
-CREATE TABLE lvr_livraisonStatut(
+CREATE TABLE lvr_livraisonStatut (
     id INT AUTO_INCREMENT PRIMARY KEY,
     idLivraison INT,
     idStatut INT,
@@ -64,7 +65,7 @@ CREATE TABLE lvr_livraisonStatut(
     FOREIGN KEY (idStatut) REFERENCES lvr_statut(id)
 );
 
-CREATE TABLE lvr_paiement(
+CREATE TABLE lvr_paiement (
     id INT AUTO_INCREMENT PRIMARY KEY,
     prix DECIMAL(10,2),
     idLivraison INT,
@@ -78,10 +79,10 @@ CREATE TABLE lvr_paiement(
 CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
 SELECT *
 FROM lvr_colis
-WHERE id NOT IN (SELECT idColis FROM lvr_livraison);
+WHERE id NOT IN (SELECT idColis FROM lvr_livraison WHERE idColis IS NOT NULL);
 
 /* =========================
-   TRIGGER
+   TRIGGER : statut "en attente" à la création
 ========================= */
 DELIMITER //
 CREATE TRIGGER trg_lvr_new_livraison
@@ -89,18 +90,19 @@ AFTER INSERT ON lvr_livraison
 FOR EACH ROW
 BEGIN
     INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut)
-    VALUES (NEW.id, 1, NEW.dateLivraison);
+    VALUES (NEW.id, 1, NEW.dateLivraison);  -- 1 = en attente
 END//
 DELIMITER ;
 
 /* =========================
-   PROCÉDURE : NOUVELLE LIVRAISON
+   PROCÉDURE : NOUVELLE LIVRAISON (avec coût livreur par livraison)
 ========================= */
 DELIMITER //
-CREATE PROCEDURE p_lvr_new_livraison(
+CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
     IN p_idVehicule INT,
     IN p_idLivreur INT,
     IN p_coutVehicule DECIMAL(10,2),
+    IN p_coutLivreur DECIMAL(10,2),     -
     IN p_idColis INT,
     IN p_prixKg DECIMAL(10,2),
     IN p_dateLivraison DATE
@@ -108,26 +110,29 @@ CREATE PROCEDURE p_lvr_new_livraison(
 BEGIN
     DECLARE v_idAffectation INT;
 
+    -- Vérifier que le colis n'est pas déjà en livraison
     IF EXISTS (SELECT 1 FROM lvr_livraison WHERE idColis = p_idColis) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Le colis est déjà associé à une livraison.';
     END IF;
 
-    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule)
-    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule);
+    -- Créer l'affectation avec les deux coûts
+    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur)
+    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule, p_coutLivreur);
 
     SET v_idAffectation = LAST_INSERT_ID();
 
+    -- Créer la livraison
     INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg)
     VALUES (v_idAffectation, p_idColis, 'Entrepôt Central', p_dateLivraison, p_prixKg);
 END//
 DELIMITER ;
 
 /* =========================
-   PROCÉDURE : CONFIRMATION
+   PROCÉDURE : CONFIRMATION DE LIVRAISON (livrée + paiement)
 ========================= */
 DELIMITER //
-CREATE PROCEDURE p_gestion_statut (
+CREATE OR REPLACE PROCEDURE p_gestion_statut (
     IN p_idLivraison INT,
     IN p_datePaiement DATE
 )
@@ -147,17 +152,17 @@ BEGIN
     INSERT INTO lvr_paiement (idLivraison, prix, datePaiement)
     VALUES (p_idLivraison, prixTotal, p_datePaiement);
 
+    -- Statut 2 = livrée
     INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut)
     VALUES (p_idLivraison, 2, p_datePaiement);
 END//
 DELIMITER ;
 
 /* =========================
-    Annule livraison
+   PROCÉDURE : ANNULER LIVRAISON
 ========================= */
-
 DELIMITER //
-CREATE PROCEDURE p_annuler_livraison (
+CREATE OR REPLACE PROCEDURE p_annuler_livraison (
     IN p_idLivraison INT
 )
 BEGIN
@@ -167,9 +172,8 @@ END//
 DELIMITER ;
 
 /* =========================
-   BENEFICE
+   VUE PRINCIPALE DES BÉNÉFICES (utilise coutLivreur variable)
 ========================= */
-
 CREATE OR REPLACE VIEW v_lvr_benefices AS
 SELECT
     l.id AS idLivraison,
@@ -177,8 +181,8 @@ SELECT
     c.descrip AS colis,
     c.poids_Kg,
     l.prixKg,
-    lv.salaire AS coutLivreur,
-    a.coutVehicule,
+    a.coutLivreur AS coutLivreur,          
+    a.coutVehicule AS coutVehicule,
     p.prix AS chiffreAffaires,
     p.datePaiement,
     s.descrip AS statut,
@@ -192,13 +196,11 @@ JOIN lvr_statut s ON s.id = ls.idStatut
 JOIN lvr_affectation a ON a.id = l.idAffectation
 JOIN lvr_livreur lv ON lv.id = a.idLivreur
 JOIN lvr_vehicule v ON v.id = a.idVehicule
-WHERE ls.idStatut IN (2, 3);
-
+WHERE ls.idStatut IN (2, 3);  -- livrée ou annulée
 
 /* =========================
-   BENEFICE par JOur
+   BÉNÉFICES PAR JOUR
 ========================= */
-
 CREATE OR REPLACE VIEW v_lvr_benefices_jour AS
 SELECT
     DATE(dateLivraison) AS jour,
@@ -211,7 +213,7 @@ GROUP BY DATE(dateLivraison)
 ORDER BY jour DESC;
 
 /* =========================
-   BENEFICE par mois
+   BÉNÉFICES PAR MOIS
 ========================= */
 CREATE OR REPLACE VIEW v_lvr_benefices_mois AS
 SELECT
@@ -222,11 +224,11 @@ SELECT
     SUM(coutLivreur + coutVehicule) AS cout_total,
     (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
 FROM v_lvr_benefices
-GROUP BY annee, mois;
-
+GROUP BY annee, mois
+ORDER BY annee DESC, mois DESC;
 
 /* =========================
-   BENEFICE par annee
+   BÉNÉFICES PAR ANNÉE
 ========================= */
 CREATE OR REPLACE VIEW v_lvr_benefices_annee AS
 SELECT
@@ -236,11 +238,11 @@ SELECT
     SUM(coutLivreur + coutVehicule) AS cout_total,
     (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
 FROM v_lvr_benefices
-GROUP BY YEAR(dateLivraison);
-
+GROUP BY YEAR(dateLivraison)
+ORDER BY annee DESC;
 
 /* =========================
-   Statut des livraisons
+   STATUT ACTUEL DES LIVRAISONS
 ========================= */
 CREATE OR REPLACE VIEW v_getStatusLivraison AS
 SELECT 
@@ -258,5 +260,3 @@ WHERE ls.dateStatut = (
     FROM lvr_livraisonStatut ls2
     WHERE ls2.idLivraison = l.id
 );
-
-
