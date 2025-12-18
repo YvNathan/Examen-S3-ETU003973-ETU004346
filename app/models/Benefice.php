@@ -17,51 +17,68 @@ class Benefice
         return $stmt->fetchAll();
     }
 
-    public function getBeneficesParJour($v_jour = null)
+    public function getBeneficesParPeriode($annee = null, $mois = null, $jour = null)
     {
-        if ($v_jour) {
-            $sql = "SELECT * FROM v_lvr_benefices_jour 
-                    WHERE jour = ? 
-                    ORDER BY jour DESC";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$v_jour]);
-        } else {
-            $stmt = $this->db->query("SELECT * FROM v_lvr_benefices_jour");
+        // Année + Mois + Jour
+        if ($annee && $mois && $jour) {
+            $sql = "
+                SELECT *
+                FROM v_lvr_benefices_periode
+                WHERE annee = ? AND jour = ?
+                ORDER BY jour
+            ";
+            $params = [$annee, $jour];
         }
-        return $stmt->fetchAll();
-    }
-
-    public function getBeneficesParMois($annee = null, $mois = null)
-    {
-        $sql = "SELECT * FROM v_lvr_benefices_mois WHERE 1=1";
-        $params = [];
-
-        if ($annee) {
-            $sql .= " AND annee = ?";
-            $params[] = $annee;
+        // Année + Jour (sans mois)
+        elseif ($annee && $jour) {
+            $sql = "
+                SELECT *
+                FROM v_lvr_benefices_periode
+                WHERE annee = ? AND jour = ?
+                ORDER BY jour
+            ";
+            $params = [$annee, $jour];
+        }
+        // Année + Mois
+        elseif ($annee && $mois) {
+            $sql = "
+                SELECT *
+                FROM v_lvr_benefices_mois
+                WHERE annee = ? AND mois = ?
+                ORDER BY annee DESC, mois DESC
+            ";
+            $params = [$annee, $mois];
+        }
+        // Année seule
+        elseif ($annee) {
+            $sql = "
+                SELECT *
+                FROM v_lvr_benefices_annee
+                WHERE annee = ?
+                ORDER BY annee DESC
+            ";
+            $params = [$annee];
+        }
+        // Jour seul (toutes années)
+        elseif ($jour) {
+            $sql = "
+                SELECT *
+                FROM v_lvr_benefices_periode
+                WHERE jour = ?
+                ORDER BY annee DESC
+            ";
+            $params = [$jour];
+        }
+        // Par défaut : vue journalière complète
+        else {
+            $sql = "
+                SELECT *
+                FROM v_lvr_benefices_jour
+                ORDER BY jour DESC
+            ";
+            $params = [];
         }
 
-        if ($mois) {
-            $sql .= " AND mois = ?";
-            $params[] = $mois;
-        }
-
-        $sql .= " ORDER BY annee DESC, mois DESC";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll();
-    }
-    public function getBeneficesParAnnee($annee = null)
-    {
-        $sql = "SELECT * FROM v_lvr_benefices_annee";
-        $params = [];
-
-        if ($annee) {
-            $sql .= " WHERE annee = ?";
-            $params[] = $annee;
-        }
-
-        $sql .= " ORDER BY annee DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
