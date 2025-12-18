@@ -2,7 +2,7 @@
 
 use app\controllers\StatutController;
 use app\controllers\LivraisonController;
-use app\middlewares\SecurityHeadersMiddleware;
+use app\controllers\BeneficeController;
 use flight\Engine;
 use flight\net\Router;
 
@@ -50,6 +50,18 @@ $router->group('', function (Router $router) use ($app) {
         $controller = new LivraisonController($app);
         $controller->enregistrer();
     });
+
+	// Page principale des bénéfices avec filtres par période
+	$router->get('/benefices', function () use ($app) {
+		$controller = new BeneficeController($app);
+		$controller->index();
+	});
+
+	// Page des détails complets de toutes les livraisons
+	$router->get('/benefices/details', function () use ($app) {
+		$controller = new BeneficeController($app);
+		$controller->details();
+	});
 
 	
 });
