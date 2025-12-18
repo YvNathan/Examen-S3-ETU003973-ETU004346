@@ -19,6 +19,17 @@
             margin-bottom: 1rem;
         }
 
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
         .filters {
             background: #f4f4f4;
             padding: 1.5rem;
@@ -88,6 +99,7 @@
             cursor: pointer;
             font-size: 0.9rem;
             text-decoration: none;
+            display: inline-block;
         }
 
         .btn:hover {
@@ -100,6 +112,14 @@
 
         .btn-secondary:hover {
             background: #5a6268;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background: #138496;
         }
     </style>
 </head>
@@ -131,104 +151,99 @@
         <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
         <a class="sidebar__link is-active" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
-        
     </aside>
 
     <main class="page">
-<div class="container">
-    <a href="<?= $base ?: '/' ?>" class="back-link">← Retour à l'accueil</a>
-
-    <div class="page-header">
-        <h1>📊 Rapport de Bénéfices</h1>
-        <a href="<?= $base ?>/benefices/details" class="btn btn-info">
-            Voir détails complets
-
-        </a>
-    </p>
-
-    <div class="filters">
-        <form method="get" action="<?= $base ?>/benefices">
-            <div class="filter-group">
-                <label>Année</label>
-                <input type="number" name="annee" value="<?= htmlspecialchars($annee ?? '') ?>" min="2020" max="2099">
+        <div class="container">
+            
+            <div class="page-header">
+                <h1>Rapport de Bénéfices</h1>
+                <a href="<?= $base ?>/benefices/details" class="btn btn-info">Voir détails complets</a>
             </div>
 
-            <div class="filter-group">
-                <label>Mois</label>
-                <select name="mois">
-                    <option value="">-- Tous --</option>
-                    <?php for ($m = 1; $m <= 12; $m++): ?>
-                        <option value="<?= $m ?>" <?= ($mois ?? '') == $m ? 'selected' : '' ?>>
-                            <?= date('F', mktime(0,0,0,$m,1)) ?>
-                        </option>
-                    <?php endfor; ?>
-                </select>
+            <div class="filters">
+                <form method="get" action="<?= $base ?>/benefices">
+                    <div class="filter-group">
+                        <label>Année</label>
+                        <input type="number" name="annee" value="<?= htmlspecialchars($annee ?? '') ?>" min="2020" max="2099">
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Mois</label>
+                        <select name="mois">
+                            <option value="">-- Tous --</option>
+                            <?php for ($m = 1; $m <= 12; $m++): ?>
+                                <option value="<?= $m ?>" <?= ($mois ?? '') == $m ? 'selected' : '' ?>>
+                                    <?= $m ?>
+                                </option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Jour (1–31)</label>
+                        <select name="jour">
+                            <option value="">-- Tous --</option>
+                            <?php for ($d = 1; $d <= 31; $d++): ?>
+                                <option value="<?= $d ?>" <?= ($jour ?? '') == $d ? 'selected' : '' ?>>
+                                    <?= $d ?>
+                                </option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn">Filtrer</button>
+                    <a href="<?= $base ?>/benefices" class="btn btn-secondary">Réinitialiser</a>
+                </form>
             </div>
 
-            <div class="filter-group">
-                <label>Jour (1–31)</label>
-                <select name="jour">
-                    <option value="">-- Tous --</option>
-                    <?php for ($d = 1; $d <= 31; $d++): ?>
-                        <option value="<?= $d ?>" <?= ($jour ?? '') == $d ? 'selected' : '' ?>>
-                            <?= $d ?>
-                        </option>
-                    <?php endfor; ?>
-                </select>
-            </div>
+            <?php if (!empty($benefices) && is_array($benefices)) : ?>
 
-            <button type="submit" class="btn">Filtrer</button>
-            <a href="<?= $base ?>/benefices" class="btn btn-secondary">Réinitialiser</a>
-        </form>
-    </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <?php if (isset($benefices[0]['jour']) && isset($benefices[0]['annee'])): ?>
+                                <th>Année</th>
+                                <th>Jour</th>
+                            <?php elseif (isset($benefices[0]['mois'])): ?>
+                                <th>Année</th>
+                                <th>Mois</th>
+                            <?php else: ?>
+                                <th>Année</th>
+                            <?php endif; ?>
+                            <th>Livraisons</th>
+                            <th>CA</th>
+                            <th>Coûts</th>
+                            <th>Bénéfice</th>
+                        </tr>
+                    </thead>
 
-    <?php if (!empty($benefices) && is_array($benefices)) : ?>
+                    <tbody>
+                    <?php foreach ($benefices as $row) : ?>
+                        <tr>
+                            <?php if (isset($row['jour']) && isset($row['annee'])): ?>
+                                <td><?= htmlspecialchars($row['annee'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($row['jour'] ?? '') ?></td>
+                            <?php elseif (isset($row['mois'])): ?>
+                                <td><?= htmlspecialchars($row['annee'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($row['mois'] ?? '') ?></td>
+                            <?php else: ?>
+                                <td><?= htmlspecialchars($row['annee'] ?? '') ?></td>
+                            <?php endif; ?>
+                            <td><?= htmlspecialchars(number_format($row['nb_livraisons'] ?? 0)) ?></td>
+                            <td><?= htmlspecialchars(number_format($row['ca_total'] ?? 0, 2)) ?> €</td>
+                            <td><?= htmlspecialchars(number_format($row['cout_total'] ?? 0, 2)) ?> €</td>
+                            <td><?= htmlspecialchars(number_format($row['benefice'] ?? 0, 2)) ?> €</td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
 
-        <table>
-            <thead>
-                <tr>
-                    <?php if (isset($benefices[0]['jour']) && isset($benefices[0]['annee'])): ?>
-                        <th>Année</th>
-                        <th>Jour</th>
-                    <?php elseif (isset($benefices[0]['mois'])): ?>
-                        <th>Année</th>
-                        <th>Mois</th>
-                    <?php else: ?>
-                        <th>Année</th>
-                    <?php endif; ?>
-                    <th>Livraisons</th>
-                    <th>CA</th>
-                    <th>Coûts</th>
-                    <th>Bénéfice</th>
-                </tr>
-            </thead>
+            <?php else : ?>
+                <p class="empty">Aucune donnée à afficher.</p>
+            <?php endif; ?>
 
-            <tbody>
-            <?php foreach ($benefices as $row) : ?>
-                <tr>
-                    <?php if (isset($row['jour']) && isset($row['annee'])): ?>
-                        <td><?= htmlspecialchars($row['annee'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['jour'] ?? '') ?></td>
-                    <?php elseif (isset($row['mois'])): ?>
-                        <td><?= htmlspecialchars($row['annee'] ?? '') ?></td>
-                        <td><?= htmlspecialchars(date('F', mktime(0,0,0,$row['mois'],1))) ?></td>
-                    <?php else: ?>
-                        <td><?= htmlspecialchars($row['annee'] ?? '') ?></td>
-                    <?php endif; ?>
-                    <td><?= htmlspecialchars(number_format($row['nb_livraisons'] ?? 0)) ?></td>
-                    <td><?= htmlspecialchars(number_format($row['ca_total'] ?? 0, 2)) ?> €</td>
-                    <td><?= htmlspecialchars(number_format($row['cout_total'] ?? 0, 2)) ?> €</td>
-                    <td><?= htmlspecialchars(number_format($row['benefice'] ?? 0, 2)) ?> €</td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-
-    <?php else : ?>
-        <p class="empty">Aucune donnée à afficher.</p>
-    <?php endif; ?>
-
-</div>
+        </div>
     </main>
 </div>
 </body>
