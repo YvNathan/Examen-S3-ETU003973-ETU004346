@@ -1,47 +1,82 @@
+/* =========================
+   ZONES
+========================= */
+INSERT INTO lvr_zone (nom) VALUES
+('Zone Nord'),
+('Zone Sud'),
+('Zone Est'),
+('Zone Ouest');
 
-INSERT INTO lvr_zone (id, nom) VALUES
-(1, 'Centre-ville'),
-(2, 'Analamanga'),
-(3, 'Androy');
+/* =========================
+   VEHICULES
+========================= */
+INSERT INTO lvr_vehicule (modele, immatriculation) VALUES
+('Renault Kangoo', 'AN123BC'),
+('Peugeot Partner', 'BD456EF'),
+('Fiat Ducato', 'CF789GH');
 
-INSERT INTO lvr_vehicule (id, modele, immatriculation) VALUES
-(1, 'Toyota Hilux', '1234-TAB'),
-(2, 'Nissan NV200', '5678-TBC'),
-(3, 'Suzuki Carry', '9012-TBD');
+/* =========================
+   LIVREURS
+========================= */
+INSERT INTO lvr_livreur (nom, contact, salaire) VALUES
+('Jean Dupont', '0341234567', 50.00),
+('Marie Durand', '0349876543', 55.00),
+('Ali Raharimanana', '0341122334', 60.00);
 
-INSERT INTO lvr_livreur (id, nom, contact, salaire) VALUES
-(1, 'Rakoto Jean', '0341234567', 450000),
-(2, 'Rabe Paul', '0329876543', 400000),
-(3, 'Andry Marc', '0334567890', 420000);
+/* =========================
+   STATUTS
+========================= */
+INSERT INTO lvr_statut (descrip) VALUES
+('En attente'),
+('Livré'),
+('Annulé');
 
-INSERT INTO lvr_statut (id, descrip) VALUES
-(1, 'En attente'),
-(2, 'En cours de livraison'),
-(3, 'Livré'),
-(4, 'Annulé');
+/* =========================
+   COLIS
+========================= */
+INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination) VALUES
+('Colis A', 'Alice', '0341111222', 10.5, '12 Rue Centrale, Zone Nord'),
+('Colis B', 'Bob', '0343333444', 5.0, '45 Avenue Sud, Zone Sud'),
+('Colis C', 'Charlie', '0345555666', 12.0, '78 Boulevard Est, Zone Est'),
+('Colis D', 'David', '0347777888', 7.5, '90 Rue Ouest, Zone Ouest');
 
-INSERT INTO lvr_colis (id, descrip, destinataire, contact, poids_Kg, adrDestination, idZone) VALUES
-(1, 'Documents', 'Société ABC', '0348512301', 2.50, 'IB102', 1),
-(2, 'Matériel informatique', 'Entreprise XYZ', '0345689213', 5.00, 'IV001', 2),
-(3, 'Vêtements', 'Client Particulier', '0332540157', 3.20, 'IB09', 3);
+/* =========================
+   AFFECTATIONS
+========================= */
+INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule) VALUES
+(1, 1, 30.00),
+(2, 2, 35.00),
+(3, 3, 40.00);
 
-INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination) VALUES 
-('Ordinateur portable', 'Sophie Leroy', '0678901234', 3.2, '45 Rue Nationale, Lille'),
-('Vêtements', 'Thomas Blanc', '0689012345', 1.8, '12 Place de la République, Toulouse'),
-('Livres', 'Emma Petit', '0690123456', 4.5, '33 Boulevard Haussmann, Paris'),
-('Électroménager', 'Lucas Moreau', '0601234567', 12.0, '7 Avenue Foch, Bordeaux'),
-('Smartphone', 'Marie Dubois', '0612345678', 0.5, '28 Rue de la Paix, Lyon'),
-('Jouets pour enfants', 'Pierre Martin', '0623456789', 2.3, '15 Avenue des Champs, Marseille'),
-('Équipement sportif', 'Julie Durand', '0634567890', 8.5, '52 Boulevard Victor Hugo, Nantes'),
-('Accessoires de cuisine', 'Nicolas Bernard', '0645678901', 3.7, '9 Rue Gambetta, Strasbourg'),
-('Produits cosmétiques', 'Laura Roux', '0656789012', 1.2, '18 Place Bellecour, Lyon'),
-('Outils de bricolage', 'Vincent Fournier', '0667890123', 6.8, '41 Rue Saint-Michel, Nice'),
-('Articles de bureau', 'Camille Girard', '0672345678', 2.9, '3 Avenue de la Liberté, Rennes');
+/* =========================
+   LIVRAISONS
+========================= */
+INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg) VALUES
+(1, 1, 'Entrepôt Central', '2025-12-10', 2.0),
+(2, 2, 'Entrepôt Central', '2025-12-11', 1.5),
+(3, 3, 'Entrepôt Central', '2025-12-12', 2.5);
 
+/* =========================
+   LIVRAISONSTATUTS
+========================= */
+INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut) VALUES
+(1, 1, '2025-12-10'),
+(2, 1, '2025-12-11'),
+(3, 1, '2025-12-12');
 
-UPDATE lvr_statut SET descrip = 'En attente' WHERE id = 1;
-UPDATE lvr_statut SET descrip = 'Livré' WHERE id = 2;
-UPDATE lvr_statut SET descrip = 'Annulé' WHERE id = 3;
+/* =========================
+   PAIEMENTS
+========================= */
+-- Simuler paiements pour les livraisons livrées
+INSERT INTO lvr_paiement (idLivraison, prix, datePaiement) VALUES
+(1, 21.0, '2025-12-10'), 
+(2, 7.5, '2025-12-11'), 
+(3, 30.0, '2025-12-12'); 
 
-
-
+/* =========================
+   LIVRAISONSTATUTS APRES PAIEMENT
+========================= */
+INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut) VALUES
+(1, 2, '2025-12-10'),
+(2, 2, '2025-12-11'),
+(3, 2, '2025-12-12');
