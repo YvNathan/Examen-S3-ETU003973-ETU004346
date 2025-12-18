@@ -6,6 +6,7 @@ use app\controllers\BeneficeController;
 use flight\Engine;
 use flight\net\Router;
 
+
 /** 
  * @var Router $router 
  * @var Engine $app
@@ -13,7 +14,13 @@ use flight\net\Router;
 
 $router->group('', function (Router $router) use ($app) {
 
+	// Page d'accueil minimaliste (bouton Accéder)
 	$router->get('/', function () use ($app) {
+		$app->render('landing');
+	});
+
+	// Espace de l'application (avec sidebar/nav)
+	$router->get('/app', function () use ($app) {
 		$app->render('index');
 	});
 
@@ -62,6 +69,8 @@ $router->group('', function (Router $router) use ($app) {
 		$controller = new BeneficeController($app);
 		$controller->details();
 	});
+
+    // (Login supprimé selon demande)
 
 	
 });

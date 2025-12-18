@@ -19,7 +19,6 @@ class Benefice
 
     public function getBeneficesParPeriode($annee = null, $mois = null, $jour = null)
     {
-        // Année + Mois + Jour
         if ($annee && $mois && $jour) {
             $sql = "
                 SELECT *
@@ -39,7 +38,6 @@ class Benefice
             ";
             $params = [$annee, $jour];
         }
-        // Année + Mois
         elseif ($annee && $mois) {
             $sql = "
                 SELECT *

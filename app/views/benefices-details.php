@@ -160,6 +160,7 @@
         <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
         <a class="sidebar__link is-active" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+        
     </aside>
 
     <main class="page">
@@ -219,7 +220,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                   
                     <th>Date</th>
                     <th>Colis</th>
                     <th class="text-right">Poids (Kg)</th>
@@ -244,7 +245,6 @@
                     $marge = $ca > 0 ? ($benefice / $ca * 100) : 0;
                 ?>
                 <tr>
-                    <td><?= htmlspecialchars($row['idLivraison']) ?></td>
                     <td><?= htmlspecialchars($row['dateLivraison']) ?></td>
                     <td><?= htmlspecialchars($row['colis']) ?></td>
                     <td class="text-right"><?= number_format($row['poids_Kg'], 2) ?></td>

@@ -63,6 +63,7 @@ td { padding: 12px; border: 1px solid #ddd; font-size: 14px; }
     <a class="sidebar__link is-active" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
     <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
     <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+    
   </aside>
 
   <main class="page">

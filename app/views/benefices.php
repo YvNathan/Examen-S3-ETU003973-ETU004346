@@ -103,7 +103,7 @@
         }
     </style>
 </head>
-<<<<<<< HEAD
+
 <body class="app-shell">
 <?php
     $base = rtrim($baseUrl ?? '', '/');
@@ -131,6 +131,7 @@
         <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
         <a class="sidebar__link is-active" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+        
     </aside>
 
     <main class="page">
@@ -141,17 +142,7 @@
         <h1>📊 Rapport de Bénéfices</h1>
         <a href="<?= $base ?>/benefices/details" class="btn btn-info">
             Voir détails complets
-=======
 
-<body>
-<div class="container">
-
-    <h1>Rapport de Bénéfices</h1>
-
-    <p>
-        <a class="back" href="<?= htmlspecialchars($baseUrl ?? '/') ?>">
-            ← Retour à l'accueil
->>>>>>> 21cfa2a92aab609d8b1a7c4b9b6c89277713ec3a
         </a>
     </p>
 
