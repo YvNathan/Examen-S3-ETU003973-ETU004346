@@ -1,14 +1,15 @@
 
+DROP DATABASE IF EXISTS examenS3;
 CREATE DATABASE examenS3;
 USE examenS3;
 
-
-CREATE TABLE lvr_zone(
+-- Tables
+CREATE TABLE lvr_zone (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50)
 );
 
-CREATE TABLE lvr_vehicule(
+CREATE TABLE lvr_vehicule (
     id INT AUTO_INCREMENT PRIMARY KEY,
     modele VARCHAR(50),
     immatriculation VARCHAR(20)
@@ -32,7 +33,9 @@ CREATE TABLE lvr_colis (
     destinataire VARCHAR(50),
     contact VARCHAR(50),
     poids_Kg DECIMAL(10,2),
-    adrDestination VARCHAR(100)
+    adrDestination VARCHAR(100),
+    idZone INT NULL,
+    FOREIGN KEY (idZone) REFERENCES lvr_zone(id)
 );
 
 CREATE TABLE lvr_affectation (
@@ -40,6 +43,7 @@ CREATE TABLE lvr_affectation (
     idVehicule INT,
     idLivreur INT,
     coutVehicule DECIMAL(10,2),
+    coutLivreur DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     FOREIGN KEY (idVehicule) REFERENCES lvr_vehicule(id),
     FOREIGN KEY (idLivreur) REFERENCES lvr_livreur(id)
 );
@@ -55,7 +59,7 @@ CREATE TABLE lvr_livraison (
     FOREIGN KEY (idColis) REFERENCES lvr_colis(id)
 );
 
-CREATE TABLE lvr_livraisonStatut(
+CREATE TABLE lvr_livraisonStatut (
     id INT AUTO_INCREMENT PRIMARY KEY,
     idLivraison INT,
     idStatut INT,
@@ -64,7 +68,7 @@ CREATE TABLE lvr_livraisonStatut(
     FOREIGN KEY (idStatut) REFERENCES lvr_statut(id)
 );
 
-CREATE TABLE lvr_paiement(
+CREATE TABLE lvr_paiement (
     id INT AUTO_INCREMENT PRIMARY KEY,
     prix DECIMAL(10,2),
     idLivraison INT,
@@ -73,15 +77,15 @@ CREATE TABLE lvr_paiement(
 );
 
 /* =========================
-   VUES
+   Verif Colis dispo
 ========================= */
 CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
 SELECT *
 FROM lvr_colis
-WHERE id NOT IN (SELECT idColis FROM lvr_livraison);
+WHERE id NOT IN (SELECT idColis FROM lvr_livraison WHERE idColis IS NOT NULL);
 
 /* =========================
-   TRIGGER
+   Trigger 
 ========================= */
 DELIMITER //
 CREATE TRIGGER trg_lvr_new_livraison
@@ -94,13 +98,14 @@ END//
 DELIMITER ;
 
 /* =========================
-   PROCÉDURE : NOUVELLE LIVRAISON
+   Ajouter livraison
 ========================= */
 DELIMITER //
-CREATE PROCEDURE p_lvr_new_livraison(
+CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
     IN p_idVehicule INT,
     IN p_idLivreur INT,
     IN p_coutVehicule DECIMAL(10,2),
+    IN p_coutLivreur DECIMAL(10,2),
     IN p_idColis INT,
     IN p_prixKg DECIMAL(10,2),
     IN p_dateLivraison DATE
@@ -109,12 +114,11 @@ BEGIN
     DECLARE v_idAffectation INT;
 
     IF EXISTS (SELECT 1 FROM lvr_livraison WHERE idColis = p_idColis) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Le colis est déjà associé à une livraison.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le colis est déjà associé à une livraison.';
     END IF;
 
-    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule)
-    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule);
+    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur)
+    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule, p_coutLivreur);
 
     SET v_idAffectation = LAST_INSERT_ID();
 
@@ -124,20 +128,35 @@ END//
 DELIMITER ;
 
 /* =========================
-   PROCÉDURE : CONFIRMATION
+   Confirmer livraison 
 ========================= */
 DELIMITER //
-CREATE PROCEDURE p_gestion_statut (
+CREATE OR REPLACE PROCEDURE p_gestion_statut (
     IN p_idLivraison INT,
     IN p_datePaiement DATE
 )
 BEGIN
+    DECLARE current_statut INT DEFAULT NULL;
     DECLARE prixKg DECIMAL(10,2);
     DECLARE poids_Kg DECIMAL(10,2);
     DECLARE prixTotal DECIMAL(10,2);
 
-    SELECT l.prixKg, c.poids_Kg
-    INTO prixKg, poids_Kg
+    -- Récupérer le statut actuel
+    SELECT s.id INTO current_statut
+    FROM lvr_livraisonStatut ls
+    JOIN lvr_statut s ON s.id = ls.idStatut
+    WHERE ls.idLivraison = p_idLivraison
+    ORDER BY ls.dateStatut DESC
+    LIMIT 1;
+
+    IF current_statut = 2 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Livraison déjà marquée comme livrée.';
+    ELSEIF current_statut = 3 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Livraison annulée, impossible de confirmer.';
+    END IF;
+
+    -- Calcul du paiement
+    SELECT l.prixKg, c.poids_Kg INTO prixKg, poids_Kg
     FROM lvr_livraison l
     JOIN lvr_colis c ON c.id = l.idColis
     WHERE l.id = p_idLivraison;
@@ -147,17 +166,17 @@ BEGIN
     INSERT INTO lvr_paiement (idLivraison, prix, datePaiement)
     VALUES (p_idLivraison, prixTotal, p_datePaiement);
 
+    -- Nouveau statut : livré
     INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut)
     VALUES (p_idLivraison, 2, p_datePaiement);
 END//
 DELIMITER ;
 
 /* =========================
-    Annule livraison
+  Annuler livraison
 ========================= */
-
 DELIMITER //
-CREATE PROCEDURE p_annuler_livraison (
+CREATE OR REPLACE PROCEDURE p_annuler_livraison (
     IN p_idLivraison INT
 )
 BEGIN
@@ -167,9 +186,8 @@ END//
 DELIMITER ;
 
 /* =========================
-   BENEFICE
+   BÉNÉFICES Global
 ========================= */
-
 CREATE OR REPLACE VIEW v_lvr_benefices AS
 SELECT
     l.id AS idLivraison,
@@ -177,41 +195,45 @@ SELECT
     c.descrip AS colis,
     c.poids_Kg,
     l.prixKg,
-    lv.salaire AS coutLivreur,
+    a.coutLivreur,
     a.coutVehicule,
     p.prix AS chiffreAffaires,
     p.datePaiement,
     s.descrip AS statut,
     lv.nom AS livreur,
-    v.immatriculation AS vehicule
+    v.immatriculation AS vehicule,
+    z.nom AS zone_livraison
 FROM lvr_livraison l
-JOIN lvr_colis c ON l.idColis = c.id
-LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
-JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
-JOIN lvr_statut s ON s.id = ls.idStatut
+JOIN lvr_colis c ON c.id = l.idColis
+LEFT JOIN lvr_zone z ON z.id = c.idZone
 JOIN lvr_affectation a ON a.id = l.idAffectation
 JOIN lvr_livreur lv ON lv.id = a.idLivreur
 JOIN lvr_vehicule v ON v.id = a.idVehicule
+LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
+JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
+    AND ls.dateStatut = (SELECT MAX(dateStatut) FROM lvr_livraisonStatut ls2 WHERE ls2.idLivraison = l.id)
+JOIN lvr_statut s ON s.id = ls.idStatut
 WHERE ls.idStatut IN (2, 3);
 
 
-/* =========================
-   BENEFICE par JOur
-========================= */
 
+/* =========================
+   BÉNÉFICES PAR Jour
+========================= */
 CREATE OR REPLACE VIEW v_lvr_benefices_jour AS
 SELECT
     DATE(dateLivraison) AS jour,
     COUNT(*) AS nb_livraisons,
     SUM(IFNULL(chiffreAffaires, 0)) AS ca_total,
     SUM(coutLivreur + coutVehicule) AS cout_total,
-    (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
+    SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule) AS benefice
 FROM v_lvr_benefices
-GROUP BY DATE(dateLivraison)
+GROUP BY jour
 ORDER BY jour DESC;
 
+
 /* =========================
-   BENEFICE par mois
+   BÉNÉFICES PAR MOIS
 ========================= */
 CREATE OR REPLACE VIEW v_lvr_benefices_mois AS
 SELECT
@@ -220,13 +242,14 @@ SELECT
     COUNT(*) AS nb_livraisons,
     SUM(IFNULL(chiffreAffaires, 0)) AS ca_total,
     SUM(coutLivreur + coutVehicule) AS cout_total,
-    (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
+    SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule) AS benefice
 FROM v_lvr_benefices
-GROUP BY annee, mois;
+GROUP BY annee, mois
+ORDER BY annee DESC, mois DESC;
 
 
 /* =========================
-   BENEFICE par annee
+   BÉNÉFICES PAR ANNÉE
 ========================= */
 CREATE OR REPLACE VIEW v_lvr_benefices_annee AS
 SELECT
@@ -234,9 +257,10 @@ SELECT
     COUNT(*) AS nb_livraisons,
     SUM(IFNULL(chiffreAffaires, 0)) AS ca_total,
     SUM(coutLivreur + coutVehicule) AS cout_total,
-    (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
+    SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule) AS benefice
 FROM v_lvr_benefices
-GROUP BY YEAR(dateLivraison);
+GROUP BY annee
+ORDER BY annee DESC;
 
 
 CREATE OR REPLACE VIEW v_lvr_benefices_periode AS
@@ -256,23 +280,23 @@ GROUP BY annee, mois, jour;
 
 
 /* =========================
-   Statut des livraisons
+   STATUT ACTUEL DES LIVRAISONS
 ========================= */
 CREATE OR REPLACE VIEW v_getStatusLivraison AS
-SELECT 
+SELECT
     l.id AS idLivraison,
     c.descrip AS colis,
     ls.dateStatut,
     c.adrDestination,
+    z.nom AS zone,
     s.descrip AS statut
 FROM lvr_livraisonStatut ls
 JOIN lvr_statut s ON ls.idStatut = s.id
 JOIN lvr_livraison l ON ls.idLivraison = l.id
 JOIN lvr_colis c ON l.idColis = c.id
+LEFT JOIN lvr_zone z ON z.id = c.idZone
 WHERE ls.dateStatut = (
     SELECT MAX(ls2.dateStatut)
     FROM lvr_livraisonStatut ls2
     WHERE ls2.idLivraison = l.id
 );
-
-

@@ -113,7 +113,7 @@
             <tbody>
             <?php foreach ($listeStatut as $row) : ?>
                 <tr>
-                    <td><?= htmlspecialchars($row['descrip'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['colis'] ?? '') ?></td>
                     <td><?= htmlspecialchars($row['adrDestination'] ?? '') ?></td>
                     <td><?= htmlspecialchars($row['statut'] ?? '') ?></td>
                     <td><?= htmlspecialchars($row['dateStatut'] ?? '') ?></td>
