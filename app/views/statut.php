@@ -147,8 +147,7 @@
                                     </button>
                                 </form>
 
-                                <form method="post"
-                                      action="/statut/annuler">
+                                <form method="post" action="/statut/annuler">
 
                                     <input type="hidden"
                                            name="idLivraison"

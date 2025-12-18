@@ -13,7 +13,7 @@ class Statut
 
     public function getLivraisonStatut()
     { 
-      $stmt = $this->db->query("SELECT * FROM v_getStatusLivraison");
+      $stmt = $this->db->query("SELECT * FROM v_getStatusLivraison ");
         return $stmt->fetchAll();
     }
 

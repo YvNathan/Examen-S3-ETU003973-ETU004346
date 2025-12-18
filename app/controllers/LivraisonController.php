@@ -7,6 +7,7 @@ use app\models\Vehicules;
 use app\models\Livreurs;
 use app\models\Colis;
 use app\models\Livraison;
+use app\models\Zone;
 use Flight;
 
 class LivraisonController
@@ -23,6 +24,7 @@ class LivraisonController
         $modelV = new Vehicules($this->app->db());
         $modelL = new Livreurs($this->app->db());
         $modelC = new Colis($this->app->db());
+        $modelZ = new Zone($this->app->db());
 
         $data = [
             'vehicules' => $modelV->getVehicules(),

@@ -46,14 +46,16 @@ if (empty($app) === true) {
 $app->path(__DIR__ . $ds . '..' . $ds . '..');
 
 // Core config variables
-$app->set('flight.base_url', '/ETU003973/Prepa_Examen_S3_ETU003973_ETU004346');           // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
-// $app->set('flight.base_url', '/');
+// $app->set('flight.base_url', '/ETU003973/Prepa_Examen_S3_ETU003973_ETU004346');           // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
+$app->set('flight.base_url', '/');
 $app->set('flight.case_sensitive', false);    // Set true for case sensitive routes. Default: false
 $app->set('flight.log_errors', true);         // Log errors to file. Recommended: true in production
 $app->set('flight.handle_errors', false);     // Let Tracy handle errors if false. Set true to use Flight's error handler
 $app->set('flight.views.path', __DIR__ . $ds . '..' . $ds . 'views'); // Path to views/templates
 $app->set('flight.views.extension', '.php');  // View file extension (e.g., '.php', '.latte')
 $app->set('flight.content_length', false);    // Send content length header. Usually false unless required by proxy
+define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
+
 
 // Generate a CSP nonce for each request and store in $app
 $nonce = bin2hex(random_bytes(16));
