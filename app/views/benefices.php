@@ -103,6 +103,45 @@
         }
     </style>
 </head>
+<<<<<<< HEAD
+<body class="app-shell">
+<?php
+    $base = rtrim($baseUrl ?? '', '/');
+    if ($base === '/') {
+        $base = '';
+    }
+    $base = htmlspecialchars($base, ENT_QUOTES);
+?>
+
+<header class="topbar">
+    <div class="topbar__inner">
+        <div class="topbar__brand"><a href="<?= $base ?: '/' ?>">Rojo Logistique</a></div>
+        <nav class="topbar__actions">
+            <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
+            <a class="topbar__link" href="<?= $base ?>/benefices/details">Détails livraisons</a>
+        </nav>
+    </div>
+</header>
+
+<div class="app-grid">
+    <aside class="sidebar">
+        <div class="sidebar__title">Navigation</div>
+        <a class="sidebar__link" href="<?= $base ?: '/' ?>">Accueil</a>
+        <a class="sidebar__link" href="<?= $base ?>/statut">Statuts des livraisons</a>
+        <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
+        <a class="sidebar__link is-active" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
+        <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+    </aside>
+
+    <main class="page">
+<div class="container">
+    <a href="<?= $base ?: '/' ?>" class="back-link">← Retour à l'accueil</a>
+
+    <div class="page-header">
+        <h1>📊 Rapport de Bénéfices</h1>
+        <a href="<?= $base ?>/benefices/details" class="btn btn-info">
+            Voir détails complets
+=======
 
 <body>
 <div class="container">
@@ -112,11 +151,12 @@
     <p>
         <a class="back" href="<?= htmlspecialchars($baseUrl ?? '/') ?>">
             ← Retour à l'accueil
+>>>>>>> 21cfa2a92aab609d8b1a7c4b9b6c89277713ec3a
         </a>
     </p>
 
     <div class="filters">
-        <form method="get" action="<?= htmlspecialchars($baseUrl ?? '/') ?>/benefices">
+        <form method="get" action="<?= $base ?>/benefices">
             <div class="filter-group">
                 <label>Année</label>
                 <input type="number" name="annee" value="<?= htmlspecialchars($annee ?? '') ?>" min="2020" max="2099">
@@ -147,7 +187,7 @@
             </div>
 
             <button type="submit" class="btn">Filtrer</button>
-            <a href="<?= htmlspecialchars($baseUrl ?? '/') ?>/benefices" class="btn btn-secondary">Réinitialiser</a>
+            <a href="<?= $base ?>/benefices" class="btn btn-secondary">Réinitialiser</a>
         </form>
     </div>
 
@@ -197,6 +237,8 @@
         <p class="empty">Aucune donnée à afficher.</p>
     <?php endif; ?>
 
+</div>
+    </main>
 </div>
 </body>
 </html>
