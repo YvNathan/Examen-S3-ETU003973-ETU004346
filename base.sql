@@ -265,3 +265,61 @@ DELIMITER ;
  --Annule livraison 
   INSERT INTO lvr_livraisonStatut (IdLivraison, IdStatut, DateStatut)
     VALUES (p_idLivraison, 3, NOW());
+
+
+--Vues bénéfice
+CREATE OR REPLACE VIEW v_lvr_benefices AS
+SELECT
+    l.id AS idLivraison,
+    l.dateLivraison,
+    c.descrip AS colis,
+    c.poids_Kg,
+    l.prixKg,
+    lv.salaire AS coutLivreur,
+    a.coutVehicule,
+    p.prix AS chiffreAffaires,
+    p.datePaiement,
+    s.descrip AS statut,
+    lv.nom AS livreur
+    v.immatriculation AS vehicule
+FROM lvr_livraison l
+JOIN lvr_colis c ON l.idColis = c.id
+LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
+JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
+JOIN lvr_statut s ON s.id = ls.idStatut
+JOIN lvr_affectation a ON a.id = l.idAffectation
+JOIN lvr_livreur lv ON lv.id = a.idLivreur
+JOIN lvr_vehicule v ON v.id = a.idVehicule
+WHERE ls.idStatut IN (2,3);
+
+CREATE OR REPLACE VIEW v_lvr_benefices_jour AS
+SELECT
+    DATE(dateLivraison) as jour,
+    COUNT(*) AS nb_livraisons,
+    SUM(chiffreAffaires) AS ca_total,
+    SUM(coutLivreur + coutVehicule) AS cout_total,
+    (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
+FROM v_lvr_benefices
+GROUP BY DATE(dateLivraison)
+ORDER BY jour DESC;
+
+CREATE OR REPLACE VIEW v_lvr_benefices_mois AS
+SELECT
+    YEAR(dateLivraison) AS annee,
+    MONTH(dateLivraison) AS mois,
+    COUNT(*) AS nb_livraisons,
+    SUM(IFNULL(chiffreAffaires, 0)) AS ca_total,
+    SUM(coutLivreur + coutVehicule) AS cout_total,
+    (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
+FROM v_lvr_benefices
+GROUP BY annee, mois;
+
+CREATE OR REPLACE VIEW v_lvr_benefices_annee AS
+SELECT
+    YEAR(dateLivraison) AS annee,
+    COUNT(*) AS nb_livraisons,
+    SUM(IFNULL(chiffreAffaires, 0)) AS ca_total,
+    SUM(coutLivreur + coutVehicule) AS cout_total,
+    (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
+FROM v_lvr_benefices
+GROUP BY YEAR(dateLivraison);

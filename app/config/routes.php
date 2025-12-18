@@ -1,6 +1,5 @@
 <?php
 
-use app\controllers\ApiExampleController;
 use app\controllers\StatutController;
 use app\controllers\LivraisonController;
 use app\middlewares\SecurityHeadersMiddleware;
