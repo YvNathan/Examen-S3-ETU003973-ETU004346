@@ -263,6 +263,9 @@ GROUP BY annee
 ORDER BY annee DESC;
 
 
+/* =========================
+   BÉNÉFICES PAR date
+========================= */
 CREATE OR REPLACE VIEW v_lvr_benefices_date AS
 SELECT
     DATE(dateLivraison) AS date,
