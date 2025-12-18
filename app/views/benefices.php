@@ -128,7 +128,7 @@
                     <option value="">-- Tous --</option>
                     <?php for ($m = 1; $m <= 12; $m++): ?>
                         <option value="<?= $m ?>" <?= ($mois ?? '') == $m ? 'selected' : '' ?>>
-                            <?= date('F', mktime(0,0,0,$m,1)) ?>
+                            <?= $m ?>
                         </option>
                     <?php endfor; ?>
                 </select>
