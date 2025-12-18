@@ -139,11 +139,6 @@
 
     <main class="page">
         <div class="container">
-            
-            <p>
-                <a class="back" href="<?= $base ?>/benefices">← Retour au rapport</a>
-            </p>
-
             <h1>Détails des livraisons</h1>
 
             <?php
