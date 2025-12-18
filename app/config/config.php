@@ -68,10 +68,10 @@ return [
 	 **************************************/
 	'database' => [
 		 //MySQL Example:
-		 'host'     => '172.16.4.245',      // Database host (e.g., 'localhost', 'db.example.com')
-		 'dbname'   => 'db_s2_ETU003973',   // Database name (e.g., 'flightphp')
-		 'user'     => 'ETU003973',  // Database user (e.g., 'root')
-		 'password' => 'easPC308',  // Database password (never commit real passwords)
+		 'host'     => 'localhost',      // Database host (e.g., 'localhost', 'db.example.com')
+		 'dbname'   => 'examenS3',   // Database name (e.g., 'flightphp')
+		 'user'     => 'root',  // Database user (e.g., 'root')
+		 'password' => '',  // Database password (never commit real passwords)
 
 		// SQLite Example:
 		// 'file_path' => __DIR__ . $ds . '..' . $ds . 'database.sqlite', // Path to SQLite file

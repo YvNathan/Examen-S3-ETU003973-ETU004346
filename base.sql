@@ -2,45 +2,42 @@ CREATE DATABASE examenS3;
 USE examenS3;
 
 CREATE TABLE lvr_zone(
-     id INT PRIMARY KEY ,
+     id INT AUTO_INCREMENT PRIMARY KEY,
      nom VARCHAR(50)
 )
 
 CREATE TABLE lvr_vehicule(
-    id INT PRIMARY KEY ,
-    modele VARCHAR(50) ,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    modele VARCHAR(50),
     immatriculation VARCHAR(20)
 );
 
 CREATE TABLE lvr_livreur (
-    id INT PRIMARY KEY , 
-    nom VARCHAR(100) ,
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    nom VARCHAR(100),
     contact VARCHAR(20),
     salaire DECIMAL(10,2)
     
 );
 
 CREATE TABLE lvr_statut (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     descrip VARCHAR(100)
 );
 
 
 CREATE TABLE lvr_colis (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     descrip VARCHAR(100),
     destinataire VARCHAR(50),
     contact VARCHAR(50),
-    poids_Kg DECIMAL(10,2)
-    adrDestination VARCHAR(100), 
-    idZone INT,
-
-    FOREIGN KEY (idZone) REFERENCES lvr_zone(id)
+    poids_Kg DECIMAL(10,2),
+    adrDestination VARCHAR(100)
 );
 
 
 CREATE TABLE lvr_affectation (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     idVehicule INT, 
     idLivreur INT, 
     coutVehicule DECIMAL(10,2),
@@ -51,11 +48,11 @@ CREATE TABLE lvr_affectation (
 )
 
 CREATE TABLE lvr_livraison (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     idAffectation INT,
     idColis INT ,
     adresseDepart VARCHAR(100),
-    date DATE,
+    dateLivraison DATE,
     prixKg DECIMAL(10,2),
     
     FOREIGN KEY (idAffectation) REFERENCES lvr_affectation(id),
@@ -63,7 +60,7 @@ CREATE TABLE lvr_livraison (
 );
 
 CREATE TABLE lvr_livraisonStatut(
-     id INT PRIMARY KEY,
+     id INT AUTO_INCREMENT PRIMARY KEY,
      idLivraison INT,
      idStatut INT,
      dateStatut DATE, 
@@ -74,16 +71,74 @@ CREATE TABLE lvr_livraisonStatut(
 )
 
 CREATE TABLE lvr_paiement(
-     id INT PRIMARY KEY,
+     id INT AUTO_INCREMENT PRIMARY KEY,
      prix DECIMAL(10,2),
      idLivraison INT,
-     date DATE,
+     datePaiement DATE,
 
      FOREIGN KEY (idLivraison) REFERENCES lvr_livraison(id)
 )
 
+
+
+
+---Liste des colis disponibles
+CREATE VIEW v_lvr_getColisDisponibles AS
+SELECT * FROM lvr_colis 
+WHERE id NOT IN (SELECT idColis FROM lvr_livraison);
+
+
+
+
+---Trigger insertion nouveau statut au moment de la création d'une nouvelle livraison--
+DELIMITER //
+CREATE TRIGGER trg_lvr_new_livraison
+AFTER INSERT ON lvr_livraison
+FOR EACH ROW
+BEGIN
+    INSERT INTO lvr_livraisonStatut (IdLivraison, IdStatut, DateStatut)
+    VALUES (NEW.id, 1, NEW.dateLivraison); 
+END//
+DELIMITER ;
+
+---Procedure pour engendrer une livraison--
+DELIMITER //
+CREATE PROCEDURE p_lvr_new_livraison(
+    p_idVehicule INT,
+    p_idLivreur INT,
+    p_coutVehicule DECIMAL(10,2),
+    p_idColis INT,
+    p_prixKg DECIMAL(10,2),
+    p_dateLivraison DATE
+)
+BEGIN
+    DECLARE v_idAffectation INT;
+    --verification de la disponibilite du colis
+    IF EXISTS (SELECT 1 FROM lvr_livraison WHERE idColis = p_idColis) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le colis est déjà associé à une livraison.';
+    END IF;
+
+    --verification des montants
+    IF p_coutVehicule < 0 OR p_prixKg < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les montants ne peuvent pas être négatifs.';
+    END IF;
+
+    --insert affectation
+    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule)
+    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule);
+    SET v_idAffectation = LAST_INSERT_ID();
+
+    --insert new livraison
+    INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg)
+    VALUES (v_idAffectation, p_idColis, 'Entrepôt Central', p_dateLivraison, p_prixKg);
+END//
+DELIMITER ;
+
+
+
+
 ---selection de tout les statut de livraison---
-CREATE OR REPLACE VIEW v_getStatusLivraison AS
+CREATE VIEW v_getStatusLivraison AS
 SELECT 
     c.descrip,
     ls.dateStatut,
@@ -95,18 +150,17 @@ JOIN lvr_livraison l    ON ls.idLivraison = l.id
 JOIN lvr_colis c        ON l.idColis = c.id;
 
 
+
 ---Procedure pour la confirmation de livraison--
-CREATE OR REPLACE PROCEDURE p_gestion_statut (
+DELIMITER //
+CREATE PROCEDURE p_gestion_statut (
     p_idLivraison INT,
     p_datePaiement DATE
 )
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    prixKg    DECIMAL(10,2);
-    poids_Kg  DECIMAL(10,2);
-    prixTotal DECIMAL(10,2);
 BEGIN
+    DECLARE prixKg    DECIMAL(10,2);
+    DECLARE poids_Kg  DECIMAL(10,2);
+    DECLARE prixTotal DECIMAL(10,2);
     --Verifie que Livraison est en attente pour ce livraison 
     IF NOT EXISTS (
         SELECT 1
@@ -114,7 +168,7 @@ BEGIN
         WHERE idLivraison = p_idLivraison
           AND idStatut = 1
     ) THEN
-        RAISE EXCEPTION 'Livraison % inexistante ou non en cours', p_idLivraison;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Livraison inexistante ou non en cours';
     END IF;
 
     -- Récup des données de livraison
@@ -124,28 +178,19 @@ BEGIN
     JOIN lvr_colis c ON c.id = l.idColis
     WHERE l.id = p_idLivraison;
 
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'Données manquantes pour la livraison %', p_idLivraison;
+    IF prixKg IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Données manquantes pour la livraison';
     END IF;
 
     -- Calcul du prix total
-    prixTotal := prixKg * poids_Kg;
+    SET prixTotal = prixKg * poids_Kg;
 
     -- Insert dans paiement
-    INSERT INTO lvr_paiement (idLivraison, prix, date)
+    INSERT INTO lvr_paiement (idLivraison, prix, datePaiement)
     VALUES (p_idLivraison, prixTotal, p_datePaiement);
 
-    -- Mise à jour du statut
-    UPDATE lvr_livraisonStatut
-    SET idStatut = 2,
-        dateStatut = p_datePaiement
-    WHERE idLivraison = p_idLivraison;
-
-END;
-$$;
-
-
-
-
-  
-  
+    -- Insertion du nouveau statut
+    INSERT INTO lvr_livraisonStatut (IdLivraison, IdStatut, DateStatut)
+    VALUES (p_idLivraison, 2, p_datePaiement);
+END//
+DELIMITER ;
