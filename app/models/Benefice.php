@@ -23,7 +23,7 @@ class Benefice
         if ($annee && $mois && $jour) {
             $sql = "
                 SELECT *
-                FROM v_lvr_benefices_jour_mois
+                FROM v_lvr_benefices_periode
                 WHERE annee = ? AND jour = ?
                 ORDER BY jour
             ";
@@ -33,7 +33,7 @@ class Benefice
         elseif ($annee && $jour) {
             $sql = "
                 SELECT *
-                FROM v_lvr_benefices_jour_mois
+                FROM v_lvr_benefices_periode
                 WHERE annee = ? AND jour = ?
                 ORDER BY jour
             ";
@@ -63,7 +63,7 @@ class Benefice
         elseif ($jour) {
             $sql = "
                 SELECT *
-                FROM v_lvr_benefices_jour_mois
+                FROM v_lvr_benefices_periode
                 WHERE jour = ?
                 ORDER BY annee DESC
             ";
