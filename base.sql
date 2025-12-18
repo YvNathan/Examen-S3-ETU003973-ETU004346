@@ -140,6 +140,7 @@ DELIMITER ;
 ---selection de tout les statut de livraison---
 CREATE VIEW v_getStatusLivraison AS
 SELECT 
+    l.id AS idLivraison,
     c.descrip,
     ls.dateStatut,
     c.adrDestination,
@@ -147,10 +148,9 @@ SELECT
 FROM lvr_livraisonStatut ls
 JOIN lvr_statut s      ON ls.idStatut = s.id
 JOIN lvr_livraison l    ON ls.idLivraison = l.id
-JOIN lvr_colis c        ON l.idColis = c.id;
+JOIN lvr_colis c        ON l.idColis = c.id ;
 
-<<<<<<< HEAD
-=======
+
 ---Trigger insertion nouveau statut au moment de la création d'une nouvelle livraison--
 CREATE OR REPLACE FUNCTION fn_lvr_new_livraison_statut()
 RETURNS TRIGGER AS $$
@@ -214,11 +214,8 @@ $$;
 
 ---Liste des colis disponibles
 CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
-SELECT * FROM lcr_colis 
+SELECT * FROM lvr_colis 
 WHERE id NOT IN (SELECT idColis FROM lvr_livraison);
-
->>>>>>> d82dee14f0d9e09832b2f2bfc57cd6127d93e5e5
-
 
 ---Procedure pour la confirmation de livraison--
 DELIMITER //
@@ -263,3 +260,8 @@ BEGIN
     VALUES (p_idLivraison, 2, p_datePaiement);
 END//
 DELIMITER ;
+
+
+ --Annule livraison 
+  INSERT INTO lvr_livraisonStatut (IdLivraison, IdStatut, DateStatut)
+    VALUES (p_idLivraison, 3, NOW());

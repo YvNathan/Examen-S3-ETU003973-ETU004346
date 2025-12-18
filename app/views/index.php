@@ -24,6 +24,7 @@
             <p>Bienvenue. Choisissez une action ci-dessous&nbsp;:</p>
             <div class="actions">
                 <a class="primary" href="/statut">Voir les statuts de livraison</a>
+                <a class="primary" href="/livraisons/nouveau">Créer une livraison</a>
                 <a class="secondary" href="/">Rafraîchir</a>
             </div>
         </div>

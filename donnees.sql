@@ -17,7 +17,8 @@ INSERT INTO lvr_livreur (id, nom, contact, salaire) VALUES
 INSERT INTO lvr_statut (id, descrip) VALUES
 (1, 'En attente'),
 (2, 'En cours de livraison'),
-(3, 'Livré');
+(3, 'Livré'),
+(4, 'Annulé');
 
 INSERT INTO lvr_colis (id, descrip, destinataire, contact, poids_Kg, adrDestination, idZone) VALUES
 (1, 'Documents', 'Société ABC', '0348512301', 2.50, 'IB102', 1),
@@ -28,9 +29,19 @@ INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination)
 ('Ordinateur portable', 'Sophie Leroy', '0678901234', 3.2, '45 Rue Nationale, Lille'),
 ('Vêtements', 'Thomas Blanc', '0689012345', 1.8, '12 Place de la République, Toulouse'),
 ('Livres', 'Emma Petit', '0690123456', 4.5, '33 Boulevard Haussmann, Paris'),
-('Électroménager', 'Lucas Moreau', '0601234567', 12.0, '7 Avenue Foch, Bordeaux');
+('Électroménager', 'Lucas Moreau', '0601234567', 12.0, '7 Avenue Foch, Bordeaux'),
+('Smartphone', 'Marie Dubois', '0612345678', 0.5, '28 Rue de la Paix, Lyon'),
+('Jouets pour enfants', 'Pierre Martin', '0623456789', 2.3, '15 Avenue des Champs, Marseille'),
+('Équipement sportif', 'Julie Durand', '0634567890', 8.5, '52 Boulevard Victor Hugo, Nantes'),
+('Accessoires de cuisine', 'Nicolas Bernard', '0645678901', 3.7, '9 Rue Gambetta, Strasbourg'),
+('Produits cosmétiques', 'Laura Roux', '0656789012', 1.2, '18 Place Bellecour, Lyon'),
+('Outils de bricolage', 'Vincent Fournier', '0667890123', 6.8, '41 Rue Saint-Michel, Nice'),
+('Articles de bureau', 'Camille Girard', '0672345678', 2.9, '3 Avenue de la Liberté, Rennes');
 
 
+UPDATE lvr_statut SET descrip = 'En attente' WHERE id = 1;
+UPDATE lvr_statut SET descrip = 'Livré' WHERE id = 2;
+UPDATE lvr_statut SET descrip = 'Annulé' WHERE id = 3;
 
 
 

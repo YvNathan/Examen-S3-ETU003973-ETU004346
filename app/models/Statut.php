@@ -19,8 +19,16 @@ class Statut
 
     public function acheverLivraison($idLivraison, $datePaiement)
     {
-      $sql = "CALL p_gestio_statut($idLivraison, '$datePaiement')";
-      $this->db->query($sql);
-    } 
+      $sql = "CALL p_gestion_statut(?, ?)";
+      $stmt = $this->db->prepare($sql);
+      $stmt->execute([$idLivraison, $datePaiement]);
+    }
+
+    public function annulerLivraison($idLivraison)
+    {
+      $sql = "UPDATE lvr_livraisonStatut SET idStatut = 3, dateStatut = CURDATE() WHERE idLivraison = ? AND idStatut = 1";
+      $stmt = $this->db->prepare($sql);
+      $stmt->execute([$idLivraison]);
+    }
 
 }

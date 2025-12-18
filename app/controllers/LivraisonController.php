@@ -28,6 +28,7 @@ class LivraisonController
             'vehicules' => $modelV->getVehicules(),
             'livreurs'  => $modelL->getLivreurs(),
             'colis'     => $modelC->getColisDisponibles(),
+            'baseUrl'   => Flight::get('flight.base_url'),
         ];
 
         $this->app->render('form', $data);
@@ -48,10 +49,11 @@ class LivraisonController
                 $req->dateLivraison
             );
 
-            $this->app->redirect('/livraisons?success=1');
+            $baseUrl = Flight::get('flight.base_url');
+            $this->app->redirect($baseUrl . '/livraisons/nouveau?success=1');
 
         } catch (\Exception $e) {
-            Flight::render('livraison/formulaire', [
+            Flight::render('form', [
                 'error' => $e->getMessage(),
             ]);
         }
