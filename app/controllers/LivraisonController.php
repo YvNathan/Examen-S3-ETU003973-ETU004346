@@ -46,6 +46,7 @@ class LivraisonController
                 $req->idVehicule,
                 $req->idLivreur,
                 $req->coutVehicule,
+                $req->coutLivreur,
                 $req->idColis,
                 $req->prixKg,
                 $req->dateLivraison

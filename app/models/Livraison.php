@@ -13,7 +13,7 @@ class Livraison
         $this->db = $db;
     }
 
-    public function creer($idVehicule, $idLivreur, $coutVehicule, $idColis, $prixKg, $dateLivraison)
+    public function creer($idVehicule, $idLivreur, $coutVehicule, $coutLivreur, $idColis, $prixKg, $dateLivraison)
     {
         try {
             $sql = "CALL p_lvr_new_livraison(?, ?, ?, ?, ?, ?)";
@@ -23,6 +23,7 @@ class Livraison
                 $idVehicule,
                 $idLivreur,
                 $coutVehicule,
+                $coutLivreur,
                 $idColis,
                 $prixKg,
                 $dateLivraison
