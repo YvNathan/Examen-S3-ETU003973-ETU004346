@@ -20,7 +20,7 @@ class Benefice
 
     public function getBeneficesParPeriode($annee = null, $mois = null, $jour = null)
     {
-        if ($jour) {
+        if ($jour || (!$mois && !$annee)) {
             $conditions = [];
             $params = [];
 
@@ -32,15 +32,13 @@ class Benefice
                 $conditions[] = 'mois = ?';
                 $params[] = $mois;
             }
-            $conditions[] = 'jour = ?';
-            $params[] = $jour;
+            if ($jour) {
+                $conditions[] = 'jour = ?';
+                $params[] = $jour;
+            }
 
-            $sql = "
-            SELECT *
-            FROM v_lvr_benefices_jour
-            WHERE " . implode(' AND ', $conditions) . "
-            ORDER BY date DESC
-        ";
+            $where = empty($conditions) ? '' : 'WHERE ' . implode(' AND ', $conditions);
+            $sql = "SELECT * FROM v_lvr_benefices_periode $where ORDER BY date DESC";
 
             return $this->execute($sql, $params);
         }
@@ -58,7 +56,6 @@ class Benefice
                 [$annee]
             );
         }
-
         return $this->execute(
             "SELECT * FROM v_lvr_benefices_jour ORDER BY date DESC"
         );

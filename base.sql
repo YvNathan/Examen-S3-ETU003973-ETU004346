@@ -162,7 +162,22 @@ FROM v_lvr_benefices
 GROUP BY annee
 ORDER BY annee DESC;
 
--- Statut actuel des livraisons
+-- Benefices par période
+CREATE OR REPLACE VIEW v_lvr_benefices_periode AS
+SELECT
+    DATE(dateLivraison) AS date,
+    YEAR(dateLivraison) AS annee,
+    MONTH(dateLivraison) AS mois,
+    DAY(dateLivraison) AS jour,
+    COUNT(*) AS nb_livraisons,
+    SUM(IFNULL(chiffreAffaires, 0)) AS ca_total,
+    SUM(coutLivreur + COALESCE(coutVehicule, 0)) AS cout_total,
+    SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + COALESCE(coutVehicule, 0)) AS benefice
+FROM v_lvr_benefices
+GROUP BY date, annee, mois, jour
+ORDER BY date DESC;
+
+-- Statut actuel des livraisons (corrigé)
 CREATE OR REPLACE VIEW v_getStatusLivraison AS
 SELECT
     l.id AS idLivraison,
@@ -173,7 +188,10 @@ SELECT
     s.descrip AS statut
 FROM lvr_livraison l
 JOIN lvr_colis c ON l.idColis = c.id
-LEFT JOIN lvr_zone z ON z.id = c.idZone
+JOIN lvr_affectation a ON a.id = l.idAffectation
+LEFT JOIN lvr_zone z ON z.id = a.idZone
+JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
+JOIN lvr_statut s ON s.id = ls.idStatut
 WHERE ls.id = (
     SELECT ls2.id
     FROM lvr_livraisonStatut ls2
