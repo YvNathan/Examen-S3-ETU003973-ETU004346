@@ -29,16 +29,7 @@ INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination)
 ('Colis réfrigéré - Produits frais', 'Supermarché Bio', '01 44 33 22 11', 12.80, '10 Place du Marché, 75002 Paris');
 
 INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination) VALUES
-('Ordinateur portable', 'M. Martin', '06 12 34 56 78', 2.30, '24 Rue Victor Hugo, 92100 Boulogne-Billancourt'),
-('Pièces automobiles', 'Garage Auto Plus', '01 47 58 69 70', 42.00, '8 Rue des Mécaniciens, 92000 Nanterre'),
-('Colis express - Documents', 'Cabinet Juridique Alpha', '01 40 20 30 40', 1.10, '15 Avenue de l''Opéra, 75001 Paris'),
-('Équipement sportif', 'Salle Fitness Pro', '01 34 56 78 90', 28.60, '99 Rue du Stade, 94000 Créteil'),
-('Produits cosmétiques', 'Institut Beauté Zen', '01 22 33 44 55', 6.90, '4 Rue des Lilas, 93100 Montreuil'),
-('Batteries industrielles', 'Société EnerTech', '01 88 77 66 55', 85.00, 'Zone Industrielle Nord, 95500 Gonesse'),
-('Colis fragile - Œuvres d''art', 'Galerie Lumière', '01 60 70 80 90', 14.50, '27 Rue des Arts, 75003 Paris'),
-('Matériel médical', 'Clinique Saint-Paul', '01 42 21 12 21', 19.80, '5 Avenue de la Santé, 75013 Paris'),
-('Vêtements - Collection été', 'Boutique Mode Chic', '01 53 64 75 86', 9.40, '18 Rue du Commerce, 75015 Paris'),
-('Composants électroniques', 'Startup Innovatek', '01 71 82 93 04', 3.75, '42 Rue des Startups, 75010 Paris');
+('Ordinateur portable', 'M. Martin', '06 12 34 56 78', 2.30, '24 Rue Victor Hugo, 92100 Boulogne-Billancourt');
 
 
 

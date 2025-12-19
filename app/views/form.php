@@ -150,17 +150,13 @@
 
   <script>
     function selectColis(id, btn) {
-      // Réinitialiser tous les boutons
       document.querySelectorAll('.btn-select').forEach(b => {
         b.textContent = 'Sélectionner';
         b.style.background = '#0066cc';
       });
-
-      // Mettre à jour le bouton sélectionné
       btn.textContent = '✓ Sélectionné';
       btn.style.background = '#28a745';
 
-      // Mettre à jour le champ caché
       document.getElementById('selectedColis').value = id;
     }
   </script>
