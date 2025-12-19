@@ -7,131 +7,6 @@
     <title>Rapport de Bénéfices</title>
 
     <link rel="stylesheet" href="/assets/styles.css">
-
-    <style>
-        .container {
-            max-width: 960px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .page-header h1 {
-            margin: 0;
-        }
-
-        .filters {
-            background: #f4f4f4;
-            padding: 1.5rem;
-            border-radius: 4px;
-            margin-bottom: 2rem;
-        }
-
-        .filters form {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .filter-group label {
-            margin-bottom: 0.3rem;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .filter-group input,
-        .filter-group select {
-            padding: 0.4rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            vertical-align: middle;
-        }
-
-        th {
-            background: #f4f4f4;
-            text-align: center;
-            color: #333;
-        }
-
-        td {
-            text-align: center;
-            color: #333;
-        }
-
-        tfoot td {
-            background: #e8f5e9;
-            font-weight: bold;
-            color: #1b5e20;
-        }
-
-        .empty {
-            padding: 12px;
-            background: #fffbe6;
-            border: 1px solid #ffe58f;
-            text-align: center;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            background: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            background: #218838;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .btn-info {
-            background: #17a2b8;
-        }
-
-        .btn-info:hover {
-            background: #138496;
-        }
-    </style>
 </head>
 
 <body class="app-shell">
@@ -271,6 +146,10 @@
             </div>
         </main>
     </div>
+
+    <footer>
+        &copy; 2025 Rojo Logistique — Tous droits réservés
+    </footer>
 </body>
 
 </html>
