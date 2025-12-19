@@ -36,12 +36,14 @@ class Benefice
                 $params[] = $jour;
             }
 
-
-            $sql = "
-            SELECT *
-            FROM v_lvr_benefices_jour
-            WHERE " . implode(' AND ', $conditions) ;
-            return $this->execute($sql, $params);
+            if (!empty($conditions)) {
+                $sql = "SELECT * FROM v_lvr_benefices_periode WHERE " . implode(' AND ', $conditions);
+                return $this->execute($sql, $params);
+            }
+            
+            return $this->execute(
+                "SELECT * FROM v_lvr_benefices_periode ORDER BY date DESC"
+            );
         }
 
         if ($annee && $mois) {
@@ -58,7 +60,7 @@ class Benefice
             );
         }
         return $this->execute(
-            "SELECT * FROM v_lvr_benefices_jour ORDER BY jour DESC"
+            "SELECT * FROM v_lvr_benefices_periode ORDER BY date DESC"
         );
     }
 
