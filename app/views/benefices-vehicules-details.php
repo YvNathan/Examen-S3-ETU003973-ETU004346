@@ -17,9 +17,7 @@
         <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
         <nav class="topbar__actions">
             <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-            <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
-            <a class="topbar__link" href="<?= $base ?>/benefices/details">Détails livraisons</a>
-            <a class="topbar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices véhicules</a>
+            <a class="topbar__link" href="<?= $base ?>/accueil">Réinitialiser</a>
         </nav>
     </div>
 </header>
@@ -33,6 +31,7 @@
         <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices par véhicule</a>
+        <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
         <a class="sidebar__link is-active" href="#">Détails véhicule</a>
     </aside>
 
@@ -51,12 +50,8 @@
                         <div class="value"><?= number_format($totaux['ca'] ?? 0, 2) ?></div>
                     </div>
                     <div class="stat-item">
-                        <h3>Coût véhicule (Ar)</h3>
-                        <div class="value"><?= number_format($totaux['coutVehicule'] ?? 0, 2) ?></div>
-                    </div>
-                    <div class="stat-item">
-                        <h3>Salaire livreur (Ar)</h3>
-                        <div class="value"><?= number_format($totaux['coutLivreur'] ?? 0, 2) ?></div>
+                        <h3>Coûts Totaux (Ar)</h3>
+                        <div class="value"><?= number_format(($totaux['coutVehicule'] ?? 0) + ($totaux['coutLivreur'] ?? 0), 2) ?></div>
                     </div>
                     <div class="stat-item">
                         <h3>Bénéfice (Ar)</h3>

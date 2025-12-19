@@ -23,7 +23,7 @@
       <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
       <nav class="topbar__actions">
         <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-        <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
+        <a class="topbar__link" href="<?= $base ?>/accueil">Réinitialiser</a>
       </nav>
     </div>
   </header>
@@ -36,7 +36,8 @@
       <a class="sidebar__link is-active" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
       <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
       <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
-
+      <a class="sidebar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices par véhicule</a>
+      <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
     </aside>
 
     <main class="page">
