@@ -102,7 +102,6 @@ SELECT
     c.descrip AS colis,
     c.poids_Kg,
     l.prixKg,
-    -- Prix de base + supplément zone
     l.prixKg * c.poids_Kg * (1 + COALESCE(z.pourcentage, 0)/100) AS prixLivraisonAvecSupplement,
     a.coutLivreur,
     a.coutVehicule,
@@ -116,7 +115,7 @@ SELECT
 FROM lvr_livraison l
 JOIN lvr_colis c ON c.id = l.idColis
 JOIN lvr_affectation a ON a.id = l.idAffectation
-LEFT JOIN lvr_zone z ON z.id = a.idZone                     -- ← Zone depuis l'affectation
+LEFT JOIN lvr_zone z ON z.id = a.idZone
 JOIN lvr_livreur lv ON lv.id = a.idLivreur
 JOIN lvr_vehicule v ON v.id = a.idVehicule
 LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
@@ -125,12 +124,8 @@ JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
 JOIN lvr_statut s ON s.id = ls.idStatut
 WHERE ls.idStatut IN (2, 3);  -- Ajuste selon tes statuts (ex: 2=Livré, 3=Payé)
 
-<<<<<<< HEAD
 
 -- BÉNÉFICES PAR Jour
-=======
--- Bénéfices par jour
->>>>>>> 07b09107b7ca84ccaafd6e87ac7624d6240bd816
 CREATE OR REPLACE VIEW v_lvr_benefices_jour AS
 SELECT
     DATE(dateLivraison) AS jour,
@@ -178,7 +173,6 @@ SELECT
     s.descrip AS statut
 FROM lvr_livraison l
 JOIN lvr_colis c ON l.idColis = c.id
-<<<<<<< HEAD
 LEFT JOIN lvr_zone z ON z.id = c.idZone
 WHERE ls.id = (
     SELECT ls2.id
@@ -187,10 +181,3 @@ WHERE ls.id = (
     ORDER BY ls2.dateStatut DESC, ls2.id DESC
     LIMIT 1
 );
-=======
-JOIN lvr_affectation a ON l.idAffectation = a.id
-LEFT JOIN lvr_zone z ON a.idZone = z.id                     -- ← Zone depuis affectation
-JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
-    AND ls.dateStatut = (SELECT MAX(ls2.dateStatut) FROM lvr_livraisonStatut ls2 WHERE ls2.idLivraison = l.id)
-JOIN lvr_statut s ON s.id = ls.idStatut;
->>>>>>> 07b09107b7ca84ccaafd6e87ac7624d6240bd816

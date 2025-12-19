@@ -37,7 +37,7 @@ class Benefice
 
             $sql = "
             SELECT *
-            FROM v_lvr_benefices_date
+            FROM v_lvr_benefices_jour
             WHERE " . implode(' AND ', $conditions) . "
             ORDER BY date DESC
         ";
@@ -60,7 +60,7 @@ class Benefice
         }
 
         return $this->execute(
-            "SELECT * FROM v_lvr_benefices_date ORDER BY date DESC"
+            "SELECT * FROM v_lvr_benefices_jour ORDER BY date DESC"
         );
     }
 
