@@ -4,6 +4,7 @@
 use app\controllers\StatutController;
 use app\controllers\LivraisonController;
 use app\controllers\BeneficeController;
+use app\controllers\BeneficeVehiculeController;
 use app\controllers\ZoneController;
 
 use flight\Engine;
@@ -91,4 +92,14 @@ $router->get('/zones/delete/(\d+)', function ($id) use ($app) {
 		$controller = new BeneficeController($app);
 		$controller->details();
 	});	
+
+	$router->get('/benefices/vehicules', function () use ($app) {
+		$controller = new BeneficeVehiculeController($app);
+		$controller->index();
+	});
+
+	$router->get('/benefices/vehicules/@id', function ($id) use ($app) {
+		$controller = new BeneficeVehiculeController($app);
+		$controller->details($id);
+	});
 });

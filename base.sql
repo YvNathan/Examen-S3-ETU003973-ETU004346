@@ -84,17 +84,13 @@ CREATE TABLE lvr_paiement (
     FOREIGN KEY (idLivraison) REFERENCES lvr_livraison(id)
 );
 
--- ===================================
--- VUES CORRIGÉES
--- ===================================
-
--- Vue : Colis disponibles (pas encore affectés à une livraison)
+-- Colis disponibles (pas encore affectés à une livraison)
 CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
 SELECT *
 FROM lvr_colis
 WHERE id NOT IN (SELECT idColis FROM lvr_livraison WHERE idColis IS NOT NULL);
 
--- Vue de base pour les bénéfices (livraisons terminées/payées)
+-- Vue bénéfices (livraisons terminées/annulées)
     CREATE OR REPLACE VIEW v_lvr_benefices AS
     SELECT
         l.id AS idLivraison,
@@ -125,7 +121,7 @@ WHERE id NOT IN (SELECT idColis FROM lvr_livraison WHERE idColis IS NOT NULL);
     WHERE ls.idStatut IN (2, 3); 
 
 
--- BÉNÉFICES PAR Jour
+-- bénéfices par jour
 CREATE OR REPLACE VIEW v_lvr_benefices_jour AS
 SELECT
     DATE(dateLivraison) AS jour,
@@ -199,3 +195,90 @@ WHERE ls.id = (
     ORDER BY ls2.dateStatut DESC, ls2.id DESC
     LIMIT 1
 );
+
+-- Vue avec détails par véhicule (chaque livraison)
+CREATE OR REPLACE VIEW v_lvr_benefices_vehicule_details AS
+SELECT
+    v.id AS idVehicule,
+    v.modele,
+    v.immatriculation,
+    l.id AS idLivraison,
+    l.dateLivraison,
+    c.descrip AS colis,
+    c.poids_Kg,
+    l.prixKg,
+    l.prixKg * c.poids_Kg * (1 + COALESCE(z.pourcentage, 0)/100) AS prixLivraisonAvecSupplement,
+    a.coutVehicule,
+    a.coutLivreur,
+    p.prix AS chiffreAffaires,
+    p.datePaiement,
+    (a.coutVehicule + a.coutLivreur) AS coutTotal,
+    IFNULL(p.prix, 0) - (a.coutVehicule + a.coutLivreur) AS benefice,
+    s.descrip AS statut,
+    lv.nom AS livreur,
+    z.nom AS zone_livraison
+FROM lvr_vehicule v
+JOIN lvr_affectation a ON a.idVehicule = v.id
+JOIN lvr_livraison l ON l.idAffectation = a.id
+JOIN lvr_colis c ON c.id = l.idColis
+LEFT JOIN lvr_zone z ON z.id = a.idZone
+JOIN lvr_livreur lv ON lv.id = a.idLivreur
+LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
+JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
+    AND ls.dateStatut = (SELECT MAX(dateStatut) FROM lvr_livraisonStatut ls2 WHERE ls2.idLivraison = l.id)
+JOIN lvr_statut s ON s.id = ls.idStatut
+WHERE ls.idStatut IN (2, 3);
+
+-- Vue agrégée par véhicule
+CREATE OR REPLACE VIEW v_lvr_benefices_vehicules AS
+SELECT
+    v.id AS idVehicule,
+    v.modele,
+    v.immatriculation,
+    COUNT(l.id) AS nb_livraisons,
+    SUM(IFNULL(p.prix, 0)) AS chiffreAffaires,
+    SUM(a.coutVehicule + a.coutLivreur) AS coutRevient,
+    SUM(IFNULL(p.prix, 0)) - SUM(a.coutVehicule + a.coutLivreur) AS benefice,
+    MIN(l.dateLivraison) AS premiere_livraison,
+    MAX(l.dateLivraison) AS derniere_livraison
+FROM lvr_vehicule v
+LEFT JOIN lvr_affectation a ON a.idVehicule = v.id
+LEFT JOIN lvr_livraison l ON l.idAffectation = a.id
+LEFT JOIN lvr_colis c ON c.id = l.idColis
+LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
+LEFT JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
+    AND ls.dateStatut = (SELECT MAX(dateStatut) FROM lvr_livraisonStatut ls2 WHERE ls2.idLivraison = l.id)
+WHERE ls.idStatut IN (2, 3) OR l.id IS NULL
+GROUP BY v.id, v.modele, v.immatriculation
+ORDER BY benefice DESC;
+
+-- Vue de détails par véhicule
+CREATE OR REPLACE VIEW v_lvr_benefices_vehicules_details AS
+SELECT
+    v.id AS idVehicule,
+    v.modele,
+    v.immatriculation,
+    l.id AS idLivraison,
+    l.dateLivraison,
+    c.descrip AS colis,
+    c.poids_Kg,
+    l.prixKg,
+    z.nom AS zone_livraison,
+    z.pourcentage AS supplement_pourcentage,
+    a.coutVehicule,
+    a.coutLivreur,
+    p.prix AS chiffreAffaires,
+    p.datePaiement,
+    s.descrip AS statut,
+    lv.nom AS livreur
+FROM lvr_vehicule v
+JOIN lvr_affectation a ON a.idVehicule = v.id
+JOIN lvr_livraison l ON l.idAffectation = a.id
+JOIN lvr_colis c ON c.id = l.idColis
+LEFT JOIN lvr_zone z ON z.id = a.idZone
+LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
+JOIN lvr_livreur lv ON lv.id = a.idLivreur
+JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
+    AND ls.dateStatut = (SELECT MAX(dateStatut) FROM lvr_livraisonStatut ls2 WHERE ls2.idLivraison = l.id)
+JOIN lvr_statut s ON s.id = ls.idStatut
+WHERE ls.idStatut IN (2, 3);
