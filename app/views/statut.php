@@ -19,7 +19,7 @@
         <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
         <nav class="topbar__actions">
             <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-            <a class="topbar__link" href="<?= $base ?>/accueil">Réinitialiser</a>
+            <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
         </nav>
     </div>
 </header>
@@ -55,10 +55,10 @@
             <tbody>
             <?php foreach ($listeStatut as $row) : ?>
                 <tr>
-                    <td><?= htmlspecialchars($row['colis'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($row['adrDestination'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($row['statut'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($row['dateStatut'] ?? '') ?></td>
+                    <td><?= $row['colis'] ?? '' ?></td>
+                    <td><?= $row['adrDestination'] ?? '' ?></td>
+                    <td><?= $row['statut'] ?? '' ?></td>
+                    <td><?= $row['dateStatut'] ?? '' ?></td>
 
                     <td>
                         <?php if (strtolower($row['statut'] ?? '') === 'en attente') : ?>
@@ -81,7 +81,7 @@
                                       class="action-form">
                                     <input type="hidden"
                                            name="idLivraison"
-                                           value="<?= htmlspecialchars($row['idLivraison'] ?? '') ?>">
+                                           value="<?= $row['idLivraison'] ?? '' ?>">
                                     <button type="submit" class="btn">Confirmer</button>
                                 </form>
                                 <form method="post"
@@ -89,7 +89,7 @@
                                       class="action-form">
                                     <input type="hidden"
                                            name="idLivraison"
-                                           value="<?= htmlspecialchars($row['idLivraison'] ?? '') ?>">
+                                           value="<?= $row['idLivraison'] ?? '' ?>">
                                     <button type="submit" class="btn btn-danger">Annuler</button>
                                 </form>
                             </div>

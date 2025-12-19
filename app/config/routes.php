@@ -6,6 +6,7 @@ use app\controllers\LivraisonController;
 use app\controllers\BeneficeController;
 use app\controllers\BeneficeVehiculeController;
 use app\controllers\ZoneController;
+use app\controllers\ReinitController;
 
 use flight\Engine;
 use flight\net\Router;
@@ -101,5 +102,15 @@ $router->get('/zones/delete/(\d+)', function ($id) use ($app) {
 	$router->get('/benefices/vehicules/@id', function ($id) use ($app) {
 		$controller = new BeneficeVehiculeController($app);
 		$controller->details($id);
+	});
+
+	$router->get('/reinit', function () use ($app) {
+		$controller = new ReinitController($app);
+		$controller->confirm();
+	});
+
+	$router->post('/reinit/execute', function () use ($app) {
+		$controller = new ReinitController($app);
+		$controller->execute();
 	});
 });

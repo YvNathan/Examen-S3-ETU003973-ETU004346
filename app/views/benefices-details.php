@@ -125,7 +125,7 @@
             <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
             <nav class="topbar__actions">
                 <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-                <a class="topbar__link" href="<?= $base ?>/accueil">Réinitialiser</a>
+                <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
             </nav>
         </div>
     </header>
@@ -202,11 +202,11 @@
                                 $montantSupplement = $prixBase * ($pourcentage / 100);
                             ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($row['dateLivraison'] ?? '') ?></td>
-                                    <td><?= htmlspecialchars($row['colis'] ?? '') ?></td>
+                                    <td><?= $row['dateLivraison'] ?? '' ?></td>
+                                    <td><?= $row['colis'] ?? '' ?></td>
                                     <td class="text-right"><?= number_format($poids, 2) ?></td>
                                     <td class="text-right"><?= number_format($prixKg, 2) ?></td>
-                                    <td><?= htmlspecialchars($row['zone_livraison'] ?? '-') ?></td>
+                                    <td><?= $row['zone_livraison'] ?? '-' ?></td>
                                     <td class="text-right"><?= number_format($pourcentage, 2) ?> %</td>
                                     <td class="text-right"><?= number_format($montantSupplement, 2) ?></td>
                                     <td class="text-right"><?= number_format($ca, 2) ?></td>
@@ -216,12 +216,12 @@
                                     <td class="text-right <?= $benefice >= 0 ? 'positive' : 'negative' ?>">
                                         <?= number_format($benefice, 2) ?>
                                     </td>
-                                    <td><?= htmlspecialchars($row['livreur'] ?? '') ?></td>
-                                    <td><?= htmlspecialchars($row['vehicule'] ?? '') ?></td>
+                                    <td><?= $row['livreur'] ?? '' ?></td>
+                                    <td><?= $row['vehicule'] ?? '' ?></td>
                                     <td><?= htmlspecialchars($row['datePaiement'] ?? '-') ?></td>
                                     <td class="text-center">
                                         <span class="badge <?= ($row['statut'] ?? '') === 'Livré' ? 'badge-success' : 'badge-danger' ?>">
-                                            <?= htmlspecialchars($row['statut'] ?? '') ?>
+                                            <?= $row['statut'] ?? '' ?>
                                         </span>
                                     </td>
                                 </tr>

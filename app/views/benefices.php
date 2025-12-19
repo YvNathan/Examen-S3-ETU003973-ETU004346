@@ -25,7 +25,7 @@
             <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
             <nav class="topbar__actions">
                 <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-                <a class="topbar__link" href="<?= $base ?>/accueil">Réinitialiser</a>
+                <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
             </nav>
         </div>
     </header>
@@ -54,7 +54,7 @@
                     <form method="get" action="<?= $base ?>/benefices">
                         <div class="filter-group">
                             <label>Année</label>
-                            <input type="number" name="annee" value="<?= htmlspecialchars($annee ?? '') ?>" min="2020" max="2099">
+                            <input type="number" name="annee" value="<?= $annee ?? '' ?>" min="2020" max="2099">
                         </div>
 
                         <div class="filter-group">
@@ -110,7 +110,7 @@
                             <?php foreach ($benefices as $row): ?>
                                 <tr>
                                     <?php if ($affichage === 'date'): ?>
-                                        <td><?= htmlspecialchars($row['jour']) ?></td>
+                                        <td><?= $row['jour'] ?></td>
                                     <?php elseif ($affichage === 'mois'): ?>
                                         <td><?= $row['annee'] ?></td>
                                         <td><?= $row['mois'] ?></td>

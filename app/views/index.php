@@ -13,7 +13,7 @@
     <title>Accueil</title>
     <link rel="stylesheet" href="<?= $base ?>/assets/styles.css">
     <?php if (!empty($app) && ($nonce = $app->get('csp_nonce'))): ?>
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-<?= htmlspecialchars($nonce) ?>'">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-<?= $nonce ?>'">
     <?php endif; ?>
 </head>
 <body class="app-shell">
@@ -22,7 +22,7 @@
         <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
         <nav class="topbar__actions">
             <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-            <a class="topbar__link" href="<?= $base ?>/accueil">Réinitialiser</a>
+            <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
         </nav>
     </div>
 </header>

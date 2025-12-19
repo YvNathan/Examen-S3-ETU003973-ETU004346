@@ -17,7 +17,7 @@
         <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
         <nav class="topbar__actions">
             <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-            <a class="topbar__link" href="<?= $base ?>/accueil">Réinitialiser</a>
+            <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
         </nav>
     </div>
 </header>
@@ -54,8 +54,8 @@
                     <tbody>
                         <?php foreach ($vehicules as $v): ?>
                             <tr>
-                                <td><?= htmlspecialchars($v['immatriculation'] ?? '') ?></td>
-                                <td><?= htmlspecialchars($v['modele'] ?? '') ?></td>
+                                <td><?= $v['immatriculation'] ?? '' ?></td>
+                                <td><?= $v['modele'] ?? '' ?></td>
                                 <td class="text-right"><?= number_format($v['nb_livraisons'] ?? 0) ?></td>
                                 <td class="text-right"><?= number_format($v['chiffreAffaires'] ?? 0, 2) ?></td>
                                 <td class="text-right"><?= number_format($v['coutRevient'] ?? 0, 2) ?></td>
