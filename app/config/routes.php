@@ -17,17 +17,16 @@ use flight\net\Router;
 
 $router->group('', function (Router $router) use ($app) {
 
-    $router->get('/zones/edit/:id', function ($id) use ($app) {
+    $router->get('/zones/edit/@id', function ($id) use ($app) {
+        $controller = new ZoneController($app);
+        $controller->edit($id);
+    });
+    $router->post('/zones/edit/@id', function ($id) use ($app) {
         $controller = new ZoneController($app);
         $controller->edit($id);
     });
 
-    $router->post('/zones/edit/:id', function ($id) use ($app) {
-        $controller = new ZoneController($app);
-        $controller->edit($id);
-    });
-
-    $router->get('/zones/delete/:id', function ($id) use ($app) {
+    $router->get('/zones/delete/@id', function ($id) use ($app) {
         $controller = new ZoneController($app);
         $controller->delete($id);
     });
