@@ -20,7 +20,7 @@ class Zone
     {
         $stmt = $this->db->prepare("SELECT * FROM lvr_zone WHERE id = ?");
         $stmt->execute([$id]);
-        return $stmt->fetch(\PDO::FETCH_ASSOC);  // Retourne false si pas trouvé
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function add($nom, $pourcentage)

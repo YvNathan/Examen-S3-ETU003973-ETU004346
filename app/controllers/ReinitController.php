@@ -26,7 +26,6 @@ class ReinitController
         try {
             $db = Flight::db();
             
-            // Démarrer la transaction
             $db->beginTransaction();
             
             $db->exec("UPDATE lvr_paiement SET idLivraison = NULL");
