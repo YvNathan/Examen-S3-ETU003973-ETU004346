@@ -5,69 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statuts des livraisons</title>
     <link rel="stylesheet" href="/assets/styles.css">
-    <style>
-        .container {
-            max-width: 960px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            vertical-align: middle;
-        }
-        th {
-            background: #f4f4f4;
-            text-align: center;
-        }
-        td {
-            text-align: center;
-        }
-        .empty {
-            padding: 12px;
-            background: #fffbe6;
-            border: 1px solid #ffe58f;
-            text-align: center;
-        }
-        .back {
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-        .date-input {
-            width: 150px;
-            padding: 0.4rem;
-        }
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-        .btn {
-            padding: 0.5rem 1rem;
-            background: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .btn:hover {
-            background: #218838;
-        }
-        .btn-danger {
-            background: #dc3545;
-        }
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        .actions form {
-            margin: 0;
-        }
-    </style>
 </head>
 <body class="app-shell">
 <?php
@@ -134,7 +71,6 @@
                         <?php endif; ?>
                     </td>
 
-                    <!-- Boutons d'action : uniquement si "en attente" -->
                     <td>
                         <?php if (strtolower($row['statut'] ?? '') === 'en attente') : ?>
                             <div class="actions">
@@ -168,5 +104,10 @@
 </div>
     </main>
 </div>
+</main>
+</div>
+    <footer class="footer-main">
+        &copy; 2025 ETU003973-ETU004346 
+    </footer>
 </body>
 </html>
