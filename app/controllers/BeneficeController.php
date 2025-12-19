@@ -35,7 +35,6 @@ class BeneficeController
 
         $benefices = $model->getBeneficesParPeriode($annee, $mois, $jour);
         
-        // Calcul des totaux côté back-end
         $totaux = $model->calculerTotaux($benefices);
 
         $this->app->render('benefices', [

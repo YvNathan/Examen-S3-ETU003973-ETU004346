@@ -97,9 +97,9 @@ BEGIN
 END//
 DELIMITER ;
 
-/* =========================
-   Ajouter livraison
-========================= */
+/* ==============================
+    Procedure: Ajouter livraison
+================================ */
 DELIMITER //
 CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
     IN p_idVehicule INT,
@@ -113,23 +113,43 @@ CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
 BEGIN
     DECLARE v_idAffectation INT;
 
+    -- Gestionnaire d'erreur
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de créer la livraison';
+    END;
+
+    -- Vérifier que le colis est encore disponible
     IF EXISTS (SELECT 1 FROM lvr_livraison WHERE idColis = p_idColis) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le colis est déjà associé à une livraison.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le colis est déjà associé à une livraison';
     END IF;
 
-    INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur)
-    VALUES (p_idVehicule, p_idLivreur, p_coutVehicule, p_coutLivreur);
 
-    SET v_idAffectation = LAST_INSERT_ID();
+    -- Vérifier les paramètres entrés
+    IF p_coutLivreur < 0 OR p_coutVehicule <0 OR p_prixKg < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les montants entrés ne peuvent pas etre négatifs';
+    END IF;
 
-    INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg)
-    VALUES (v_idAffectation, p_idColis, 'Entrepôt Central', p_dateLivraison, p_prixKg);
+
+    -- Débuter la transaction : insert into affectation -> insert into livraison
+    START TRANSACTION;
+
+        INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur)
+        VALUES (p_idVehicule, p_idLivreur, p_coutVehicule, p_coutLivreur);
+
+        SET v_idAffectation = LAST_INSERT_ID();
+
+        INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg)
+        VALUES (v_idAffectation, p_idColis, 'Entrepôt Central', p_dateLivraison, p_prixKg);
+
+    COMMIT;
 END//
 DELIMITER ;
 
-/* =========================
-   Confirmer livraison 
-========================= */
+/* ================================
+   Procedure : Confirmer livraison 
+=============================== */
 DELIMITER //
 CREATE OR REPLACE PROCEDURE p_gestion_statut (
     IN p_idLivraison INT,
@@ -141,6 +161,13 @@ BEGIN
     DECLARE poids_Kg DECIMAL(10,2);
     DECLARE prixTotal DECIMAL(10,2);
 
+    -- Gestionnaire d'erreur
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de confirmer la livraison';
+    END;
+
     -- Récupérer le statut actuel
     SELECT s.id INTO current_statut
     FROM lvr_livraisonStatut ls
@@ -149,10 +176,16 @@ BEGIN
     ORDER BY ls.dateStatut DESC
     LIMIT 1;
 
+    -- Vérifier que la livraison est en attente
     IF current_statut = 2 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Livraison déjà marquée comme livrée.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Livraison déjà effectuée';
     ELSEIF current_statut = 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Livraison annulée, impossible de confirmer.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Livraison annulée';
+    END IF;
+
+    -- Vérification du colis
+    IF v_poids_Kg IS NULL OR v_poids_Kg <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Poids du colis invalide';
     END IF;
 
     -- Calcul du paiement
@@ -163,12 +196,16 @@ BEGIN
 
     SET prixTotal = prixKg * poids_Kg;
 
-    INSERT INTO lvr_paiement (idLivraison, prix, datePaiement)
-    VALUES (p_idLivraison, prixTotal, p_datePaiement);
+    -- Transaction : insert into Paiement -> update statuts 'livré'
+    START TRANSACTION;
 
-    -- Nouveau statut : livré
-    INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut)
-    VALUES (p_idLivraison, 2, p_datePaiement);
+        INSERT INTO lvr_paiement (idLivraison, prix, datePaiement)
+        VALUES (p_idLivraison, prixTotal, p_datePaiement);
+
+        INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut)
+        VALUES (p_idLivraison, 2, p_datePaiement);
+
+    COMMIT;
 END//
 DELIMITER ;
 
@@ -278,8 +315,6 @@ SELECT
     (SUM(IFNULL(chiffreAffaires, 0)) - SUM(coutLivreur + coutVehicule)) AS benefice
 FROM v_lvr_benefices
 GROUP BY DATE(dateLivraison);
-
-
 
 
 /* =========================
