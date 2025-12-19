@@ -273,7 +273,7 @@ SELECT
     z.nom AS zone_livraison,
     a.pourcentageZone AS supplement_pourcentage,
     a.coutVehicule,
-    a.coutLivreur,
+    a.coutLivreur,  
     p.prix AS chiffreAffaires,
     p.datePaiement,
     s.descrip AS statut,
