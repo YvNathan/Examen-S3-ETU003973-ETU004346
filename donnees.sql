@@ -1,61 +1,59 @@
+-- 4.c : 5 zones de livraison
+-- i. 3 zones à 12.5%
+-- ii. 2 zones à 0%
+INSERT INTO lvr_zone (nom, pourcentage) VALUES
+('Zone Analamahitsy', 12.50),
+('Zone Anosizato', 12.50),
+('Zone Ivato', 12.50),
+('Zone Centre-Ville', 0.00),
+('Zone Ankorondrano', 0.00);
 
-
-INSERT INTO lvr_statut (id, descrip) VALUES
-(1, 'en attente'),
-(2, 'livré'),
-(3, 'annulé');
-
-
+-- 4.a : 10 véhicules
 INSERT INTO lvr_vehicule (modele, immatriculation) VALUES
-('Peugeot Expert', 'AB-123-CD'),
-('Renault Kangoo', 'EF-456-GH'),
-('Citroën Berlingo', 'IJ-789-KL'),
-('Fiat Ducato', 'MN-012-OP');
+('Toyota Yaris', 'T 1001 AA'),
+('Renault Clio', 'T 1002 BB'),
+('Peugeot 208', 'T 1003 CC'),
+('Hyundai i10', 'T 1004 DD'),
+('Suzuki Swift', 'T 1005 EE'),
+('Dacia Sandero', 'T 1006 FF'),
+('Kia Picanto', 'T 1007 GG'),
+('Ford Fiesta', 'T 1008 HH'),
+('Volkswagen Polo', 'T 1009 II'),
+('Citroën C3', 'T 1010 JJ');
 
+-- 4.b : 12 livreurs/chauffeurs
+-- i. 5 livreurs/chauffeurs à 15000 Ar / livraison
+-- ii. 3 livreurs/chauffeurs à 18000 Ar / livraison
+-- iii. 4 livreurs/chauffeurs à 20000 Ar / livraison
 INSERT INTO lvr_livreur (nom, contact, salaire) VALUES
-('Ahmed Benali', '06 12 34 56 78', 1800.00),
-('Sophie Martin', '06 98 76 54 32', 1950.00),
-('Karim Dubois', '06 55 44 33 22', 1700.00),
-('Léa Rousseau', '06 11 22 33 44', 1850.00);
-
--- 4. Colis (sans idZone évidemment)
-INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination) VALUES
-('Carton électronique - TV 55"', 'M. Dupont', '06 01 02 03 04', 15.50, '12 Rue de la Paix, 75001 Paris'),
-('Palette de livres', 'Librairie Centrale', '01 23 45 67 89', 120.00, '45 Avenue des Champs, 75008 Paris'),
-('Colis fragile - Verres', 'Mme Lambert', '06 05 06 07 08', 8.20, '78 Rue du Faubourg, 93000 Bobigny'),
-('Machine à café pro', 'Café des Sports', '01 99 88 77 66', 18.00, '3 Boulevard Voltaire, 95100 Argenteuil'),
-('Meuble en kit', 'M. Traore', '06 33 44 55 66', 35.70, '156 Route Nationale, 95200 Sarcelles'),
-('Matériel informatique', 'Entreprise TechLog', '01 55 66 77 88', 25.40, 'ZAC des Portes, 95300 Pontoise'),
-('Colis réfrigéré - Produits frais', 'Supermarché Bio', '01 44 33 22 11', 12.80, '10 Place du Marché, 75002 Paris');
-
-INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination) VALUES
-('Ordinateur portable', 'M. Martin', '06 12 34 56 78', 2.30, '24 Rue Victor Hugo, 92100 Boulogne-Billancourt');
+-- Groupe 15000 Ar
+('Rakoto Andry', '034 11 111 11', 15000.00),
+('Rasoanirina Mbolatiana', '033 22 222 22', 15000.00),
+('Razafy Jean', '032 33 333 33', 15000.00),
+('Randria Luc', '034 44 444 44', 15000.00),
+('Ramarojaona Eric', '033 55 555 55', 15000.00),
+-- Groupe 18000 Ar
+('Rabeharisoa Solo', '032 66 666 66', 18000.00),
+('Razafindrakoto Hery', '034 77 777 77', 18000.00),
+('Andriamanalina Tiana', '033 88 888 88', 18000.00),
+-- Groupe 20000 Ar
+('Razafimanantsoa Niry', '032 99 999 99', 20000.00),
+('Andrianjafy Bruno', '034 00 000 00', 20000.00),
+('Rasoloarison Dina', '033 11 000 11', 20000.00),
+('Rakotomalala Faly', '032 22 111 22', 20000.00);
 
 
+-- Statuts possibles (à adapter selon ton besoin)
+INSERT INTO lvr_statut (descrip) VALUES
+('En attente'),
+('Livré'),
+('Annulée');
 
--- Livraison 1 : livrée
-CALL p_lvr_new_livraison(1, 1, 25.00, 45.00, 1, 5.50, '2025-12-10');
-CALL p_gestion_statut(1, '2025-12-11');
+-- Exemple : Affectation d’un livreur + véhicule pour une zone à 12.5%
 
--- Livraison 2 : livrée
-CALL p_lvr_new_livraison(2, 2, 20.00, 50.00, 2, 4.80, '2025-12-12');
-CALL p_gestion_statut(2, '2025-12-13');
+INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur, idZone) VALUES
+(1, 1, 8000.00, 15000.00, 1);  -- Zone Analamahitsy (12.5%)
 
--- Livraison 3 : annulée (perte visible dans les bénéfices)
-CALL p_lvr_new_livraison(3, 3, 30.00, 40.00, 3, 6.00, '2025-12-14');
-CALL p_annuler_livraison(3);
-
--- Livraison 4 : livrée
-CALL p_lvr_new_livraison(4, 4, 35.00, 48.00, 4, 7.20, '2025-12-15');
-CALL p_gestion_statut(4, '2025-12-16');
-
--- Livraison 5 : en attente (n'apparaît pas dans les bénéfices)
-CALL p_lvr_new_livraison(1, 2, 22.00, 52.00, 5, 5.00, '2025-12-18');
-
--- Livraison 6 : livrée (même jour que la 5 pour tester le grouping par jour)
-CALL p_lvr_new_livraison(2, 1, 28.00, 46.00, 6, 6.50, '2025-12-18');
-CALL p_gestion_statut(6, '2025-12-19');
-
--- Livraison 7 : livrée
-CALL p_lvr_new_livraison(3, 4, 40.00, 55.00, 7, 4.20, '2025-12-17');
-CALL p_gestion_statut(7, '2025-12-18');
+-- Exemple pour une zone à 0%
+INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur, idZone) VALUES
+(2, 6, 7000.00, 18000.00, 4);  -- Zone Centre-Ville (0%)
