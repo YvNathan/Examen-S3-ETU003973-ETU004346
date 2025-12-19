@@ -19,7 +19,6 @@ class Benefice
 
     public function getBeneficesParPeriode($annee = null, $mois = null, $jour = null)
     {
-        // Dès qu'il y a un jour → date complète
         if ($jour) {
             $conditions = [];
             $params = [];
@@ -45,7 +44,6 @@ class Benefice
             return $this->execute($sql, $params);
         }
 
-        // Année + mois
         if ($annee && $mois) {
             return $this->execute(
                 "SELECT * FROM v_lvr_benefices_mois WHERE annee = ? AND mois = ?",
@@ -53,7 +51,6 @@ class Benefice
             );
         }
 
-        // Année seule
         if ($annee) {
             return $this->execute(
                 "SELECT * FROM v_lvr_benefices_annee WHERE annee = ?",
@@ -61,15 +58,11 @@ class Benefice
             );
         }
 
-        // Défaut → dates complètes
         return $this->execute(
             "SELECT * FROM v_lvr_benefices_date ORDER BY date DESC"
         );
     }
 
-    /**
-     * Calcule les totaux à partir d'un tableau de bénéfices
-     */
     public function calculerTotaux($benefices)
     {
         $totaux = [

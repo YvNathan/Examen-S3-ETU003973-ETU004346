@@ -46,10 +46,7 @@ $router->group('', function (Router $router) use ($app) {
 
 	  $router->get('/livraisons/nouveau', function () use ($app) {
         $controller = new LivraisonController($app);
-        $controller->nouveau();
-		
-
-		
+        $controller->nouveau();		
     });
 
     // Enregistrer la livraison
