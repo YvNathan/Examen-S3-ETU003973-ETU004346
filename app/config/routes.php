@@ -1,4 +1,3 @@
-
 <?php
 
 use app\controllers\StatutController;
@@ -11,72 +10,74 @@ use app\controllers\ReinitController;
 use flight\Engine;
 use flight\net\Router;
 
-
-/** 
- * @var Router $router 
+/**
+ * @var Router $router
  * @var Engine $app
  */
 
 $router->group('', function (Router $router) use ($app) {
 
-	$router->get('/', function () use ($app) {
-		$app->render('landing');
-	});
+    $router->get('/zones/edit/:id', function ($id) use ($app) {
+        $controller = new ZoneController($app);
+        $controller->edit($id);
+    });
 
-	$router->get('/accueil', function () use ($app) {
-		$app->render('index');
-	});
+    $router->post('/zones/edit/:id', function ($id) use ($app) {
+        $controller = new ZoneController($app);
+        $controller->edit($id);
+    });
 
-	$router->get('/statut', function () use ($app) {
-		$statutcontroller = new StatutController($app);
-		$statutcontroller->getStatutLivraison();
-	});
+    $router->get('/zones/delete/:id', function ($id) use ($app) {
+        $controller = new ZoneController($app);
+        $controller->delete($id);
+    });
 
-	$router->get('/zones', function () use ($app) {
-	$controller = new ZoneController($app);
-	$controller->index();
-});
+    $router->get('/zones', function () use ($app) {
+        $controller = new ZoneController($app);
+        $controller->index();
+    });
 
-$router->get('/zones/add', function () use ($app) {
-	$controller = new ZoneController($app);
-	$controller->add();
-});
-$router->post('/zones/add', function () use ($app) {
-	$controller = new ZoneController($app);
-	$controller->add();
-});
+    $router->get('/zones/add', function () use ($app) {
+        $controller = new ZoneController($app);
+        $controller->add();
+    });
 
-$router->get('/zones/edit/(\d+)', function ($id) use ($app) {
-	$controller = new ZoneController($app);
-	$controller->edit($id);
-});
-$router->post('/zones/edit/(\d+)', function ($id) use ($app) {
-	$controller = new ZoneController($app);
-	$controller->edit($id);
-});
+    $router->post('/zones/add', function () use ($app) {
+        $controller = new ZoneController($app);
+        $controller->add();
+    });
 
-$router->get('/zones/delete/(\d+)', function ($id) use ($app) {
-	$controller = new ZoneController($app);
-	$controller->delete($id);
-});
-	$router->post('/statut/achever', function () use ($app) {
-		$statutcontroller = new StatutController($app);
-		$idLivraison = $_POST['idLivraison'] ?? null;
-		$datePaiement = $_POST['datePaiement'] ?? null;
-		$statutcontroller->acheverLivraison($idLivraison, $datePaiement);
-		$app->redirect('/statut');
-	});
+    $router->get('/', function () use ($app) {
+        $app->render('landing');
+    });
 
-	$router->post('/statut/annuler', function () use ($app) {
-		$statutcontroller = new StatutController($app);
-		$idLivraison = $_POST['idLivraison'] ?? null;
-		$statutcontroller->annulerLivraison($idLivraison);
-		$app->redirect('/statut');
-	});
+    $router->get('/accueil', function () use ($app) {
+        $app->render('index');
+    });
 
-	  $router->get('/livraisons/nouveau', function () use ($app) {
+    $router->get('/statut', function () use ($app) {
+        $controller = new StatutController($app);
+        $controller->getStatutLivraison();
+    });
+
+    $router->post('/statut/achever', function () use ($app) {
+        $controller = new StatutController($app);
+        $idLivraison = $_POST['idLivraison'] ?? null;
+        $datePaiement = $_POST['datePaiement'] ?? null;
+        $controller->acheverLivraison($idLivraison, $datePaiement);
+        $app->redirect('/statut');
+    });
+
+    $router->post('/statut/annuler', function () use ($app) {
+        $controller = new StatutController($app);
+        $idLivraison = $_POST['idLivraison'] ?? null;
+        $controller->annulerLivraison($idLivraison);
+        $app->redirect('/statut');
+    });
+
+    $router->get('/livraisons/nouveau', function () use ($app) {
         $controller = new LivraisonController($app);
-        $controller->nouveau();		
+        $controller->nouveau();
     });
 
     $router->post('/livraisons/nouveau', function () use ($app) {
@@ -84,10 +85,15 @@ $router->get('/zones/delete/(\d+)', function ($id) use ($app) {
         $controller->enregistrer();
     });
 
-	$router->get('/benefices', function () use ($app) {
-		$controller = new BeneficeController($app);
-		$controller->index();
-	});
+    $router->get('/benefices', function () use ($app) {
+        $controller = new BeneficeController($app);
+        $controller->index();
+    });
+
+    $router->get('/benefices/details', function () use ($app) {
+        $controller = new BeneficeController($app);
+        $controller->details();
+    });
 
 	$router->get('/benefices/details', function () use ($app) {
 		$controller = new BeneficeController($app);

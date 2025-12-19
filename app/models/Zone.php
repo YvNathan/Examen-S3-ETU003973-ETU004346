@@ -41,4 +41,22 @@ class Zone
         $stmt = $this->db->prepare("DELETE FROM lvr_zone WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function ensureNeutralZone()
+    {
+        $stmt = $this->db->query("SELECT COUNT(*) FROM lvr_zone WHERE id = 0");
+        if ($stmt->fetchColumn() == 0) {
+            $this->db->exec("INSERT INTO lvr_zone (id, nom) VALUES (0, 'Zone neutre')");
+        }
+    }
+
+    public function reaffectColisToNeutral($zoneId)
+    {
+        $this->db->prepare("UPDATE lvr_colis SET idZone = 0 WHERE idZone = ?")->execute([$zoneId]);
+    }
+
+    public function reaffectColisToInexistant($zoneId)
+    {
+        $this->db->prepare("UPDATE lvr_colis SET idZone = 6 WHERE idZone = ?")->execute([$zoneId]);
+    }
 }
