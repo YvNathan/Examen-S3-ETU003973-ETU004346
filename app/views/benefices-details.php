@@ -119,7 +119,7 @@
 
 <header class="topbar">
     <div class="topbar__inner">
-        <div class="topbar__brand"><a href="<?= $base ?: '/app' ?>">Rojo Logistique</a></div>
+        <div class="topbar__brand"><a href="<?= $base ?: '/app' ?>"></a></div>
         <nav class="topbar__actions">
             <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
             <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>

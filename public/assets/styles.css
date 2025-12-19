@@ -1,148 +1,14 @@
-/* =========================
-   FOOTER PRINCIPAL
-========================= */
-
-.footer-main {
+/* Scrollable table container */
+.table-scroll {
+    max-height: 400px;
+    overflow-y: auto;
     width: 100%;
-    background: linear-gradient(90deg, #0a1530 0%, #143a6d 100%);
-    color: #f8fafc;
-    text-align: center;
-    padding: 1.1rem 0 1.1rem 0;
-    font-size: 1.08rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    box-shadow: 0 -2px 18px rgba(20, 58, 109, 0.18);
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    z-index: 100;
-    border-top: 2px solid #1f6feb;
-    text-shadow: 0 1px 2px #0008;
-    transition: background 0.3s;
-}
-
-body, .app-shell {
-    padding-bottom: 70px !important; /* Pour ne pas masquer le contenu par le footer */
+    min-width: 0;
+    margin-bottom: 1.5rem;
+    box-sizing: border-box;
+    padding-right: 0;
 }
 /* =========================
-     PAGE LANDING (landing.php)
-========================= */
-body,
-html {
-    height: 100%;
-}
-.landing {
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg, #0f1f3a 0%, #1f6feb 100%);
-}
-.panel {
-    background: #ffffff;
-    border-radius: 14px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.18);
-    padding: 2rem 2.2rem;
-    width: min(520px, 92%);
-    text-align: center;
-}
-.logo {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 0 auto;
-}
-.logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-.panel h1 {
-    margin: 0 0 0.5rem 0;
-    color: #0f1f3a;
-}
-.panel p {
-    margin: 0 0 1.25rem 0;
-    color: #475569;
-}
-.cta {
-    display: inline-block;
-    padding: 0.9rem 1.4rem;
-    border-radius: 12px;
-    background: linear-gradient(120deg, #1f6feb, #3f8cff);
-    color: #fff;
-    text-decoration: none;
-    font-weight: 800;
-    letter-spacing: .02em;
-    box-shadow: 0 16px 36px rgba(31, 111, 235, 0.35);
-    transition: transform .15s, box-shadow .15s;
-}
-.cta:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 20px 40px rgba(31, 111, 235, 0.4);
-}
-   PAGE STATUT (statut.php)
-========================= */
-.container {
-    max-width: 960px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    vertical-align: middle;
-}
-th {
-    background: #f4f4f4;
-    text-align: center;
-}
-td {
-    text-align: center;
-}
-.empty {
-    padding: 12px;
-    background: #fffbe6;
-    border: 1px solid #ffe58f;
-    text-align: center;
-}
-.back {
-    display: inline-block;
-    margin-bottom: 1rem;
-}
-.date-input {
-    width: 150px;
-    padding: 0.4rem;
-}
-.actions {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-}
-.btn {
-    padding: 0.5rem 1rem;
-    background: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-.btn:hover {
-    background: #218838;
-}
-.btn-danger {
-    background: #dc3545;
-}
-.btn-danger:hover {
-    background: #c82333;
-}
-.actions form {
-    margin: 0;
-}
    PAGE BENEFICES (benefices.php)
 ========================= */
 .container {
@@ -193,7 +59,9 @@ td {
 }
 table {
     width: 100%;
+    min-width: 600px;
     border-collapse: collapse;
+    box-sizing: border-box;
 }
 th,
 td {
@@ -350,6 +218,11 @@ body {
 header {
     background-color: #1f3a5f;
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 .container {
@@ -576,7 +449,24 @@ footer {
     color: #dce3ec;
     font-size: 0.85rem;
 }
-
+.footer-main {
+  width: 100%;
+  background: linear-gradient(90deg, #0a1530 0%, #143a6d 100%);
+  color: #f8fafc;
+  text-align: center;
+  padding: 1.1rem 0 1.1rem 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  box-shadow: 0 -2px 18px rgba(20, 58, 109, 0.18);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 1200;
+  border-top: 2px solid #1f6feb;
+  text-shadow: 0 1px 2px #0008;
+  transition: background 0.3s;
+}
 /* =========================
    RESPONSIVE
 ========================= */
@@ -728,16 +618,19 @@ footer {
 }
 
 .sidebar {
-    background: #0b1224;
-    color: #e7edf7;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 6px 0 18px rgba(0, 0, 0, 0.14);
-    padding: 1.5rem 1.1rem;
-    position: sticky;
-    top: 72px;
-    min-height: calc(100vh - 72px);
+  background: #0b1224;
+  color: #e7edf7;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.14);
+  padding: 1.5rem 1.1rem;
+  position: fixed;
+  top: 91px;
+  left: 0;
+  bottom: 60px;
+  width: 260px;
+  z-index: 900;
+  overflow-y: auto;
 }
-
 .sidebar__title {
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -768,14 +661,18 @@ footer {
 }
 
 .page {
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
-    padding: 1.5rem 1.75rem;
-    min-height: calc(100vh - 120px);
-}
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+  padding: 1.5rem 1.75rem;
+    margin-left: 399px; /* Ajoute margin-left: 260px à .page */
+  margin-top: 0;
+  height: calc(100vh - 72px - 60px);
 
+   width: calc(100vw - 260px); /* 260px = largeur sidebar */
+  min-width: 0;
+}
 .page h1 {
     color: #0f1f3a;
 }
@@ -845,6 +742,6 @@ td { padding: 12px; border: 1px solid #ddd; font-size: 14px; }
 .btn-select:hover { background: #0052a3; }
 .submit-btn { background: #0066cc; color: #fff; border: none; border-radius: 4px; padding: 12px 32px; font-size: 14px; font-weight: bold; cursor: pointer; }
 .submit-btn:hover { background: #0052a3; }
-@media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .form-grid {grid-template-columns: 1fr;}}
 
 

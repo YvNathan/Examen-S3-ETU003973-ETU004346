@@ -6,10 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nouvelle livraison</title>
   <link rel="stylesheet" href="/assets/styles.css">
-  <!-- Styles déplacés dans public/assets/styles.css -->
-        grid-template-columns: 1fr;
-      }
-    }
+ 
   </style>
 </head>
 
@@ -24,7 +21,7 @@
 
   <header class="topbar">
     <div class="topbar__inner">
-      <div class="topbar__brand"><a href="<?= $base ?: '/app' ?>">Rojo Logistique</a></div>
+      <div class="topbar__brand"><a href="<?= $base ?: '/app' ?>"></a></div>
       <nav class="topbar__actions">
         <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
         <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
