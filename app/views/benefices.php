@@ -25,7 +25,7 @@
             <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
             <nav class="topbar__actions">
                 <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-                <a class="topbar__link" href="<?= $base ?>/benefices/details">Détails livraisons</a>
+                <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
             </nav>
         </div>
     </header>
@@ -38,6 +38,7 @@
             <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
             <a class="sidebar__link is-active" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
             <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+            <a class="sidebar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices par véhicule</a>
             <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
         </aside>
 
@@ -53,7 +54,7 @@
                     <form method="get" action="<?= $base ?>/benefices">
                         <div class="filter-group">
                             <label>Année</label>
-                            <input type="number" name="annee" value="<?= htmlspecialchars($annee ?? '') ?>" min="2020" max="2099">
+                            <input type="number" name="annee" value="<?= $annee ?? '' ?>" min="2020" max="2099">
                         </div>
 
                         <div class="filter-group">
@@ -99,9 +100,9 @@
                                     <th>Année</th>
                                 <?php endif; ?>
                                 <th>Livraisons</th>
-                                <th>CA</th>
-                                <th>Coûts</th>
-                                <th>Bénéfice</th>
+                                <th>CA (Ar)</th>
+                                <th>Coûts (Ar)</th>
+                                <th>Bénéfice (Ar)</th>
                             </tr>
                         </thead>
 
@@ -109,7 +110,7 @@
                             <?php foreach ($benefices as $row): ?>
                                 <tr>
                                     <?php if ($affichage === 'date'): ?>
-                                        <td><?= htmlspecialchars($row['jour']) ?></td>
+                                        <td><?= $row['jour'] ?></td>
                                     <?php elseif ($affichage === 'mois'): ?>
                                         <td><?= $row['annee'] ?></td>
                                         <td><?= $row['mois'] ?></td>
@@ -118,9 +119,9 @@
                                     <?php endif; ?>
 
                                     <td><?= number_format($row['nb_livraisons']) ?></td>
-                                    <td><?= number_format($row['ca_total'], 2) ?> €</td>
-                                    <td><?= number_format($row['cout_total'], 2) ?> €</td>
-                                    <td><?= number_format($row['benefice'], 2) ?> €</td>
+                                    <td><?= number_format($row['ca_total'], 2) ?></td>
+                                    <td><?= number_format($row['cout_total'], 2) ?></td>
+                                    <td><?= number_format($row['benefice'], 2) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -135,9 +136,9 @@
                                     <td>TOTAL</td>
                                 <?php endif; ?>
                                 <td><?= number_format($totaux['nb_livraisons'] ?? 0) ?></td>
-                                <td><?= number_format($totaux['ca_total'] ?? 0, 2) ?> €</td>
-                                <td><?= number_format($totaux['cout_total'] ?? 0, 2) ?> €</td>
-                                <td><?= number_format($totaux['benefice'] ?? 0, 2) ?> €</td>
+                                <td><?= number_format($totaux['ca_total'] ?? 0, 2) ?></td>
+                                <td><?= number_format($totaux['cout_total'] ?? 0, 2) ?></td>
+                                <td><?= number_format($totaux['benefice'] ?? 0, 2) ?></td>
                             </tr>
                         </tfoot>
                     </table>

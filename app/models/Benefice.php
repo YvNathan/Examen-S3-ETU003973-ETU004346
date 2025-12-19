@@ -78,10 +78,15 @@ class Benefice
         }
 
         foreach ($benefices as $row) {
-            $totaux['nb_livraisons'] += $row['nb_livraisons'] ?? 0;
-            $totaux['ca_total'] += $row['ca_total'] ?? 0;
-            $totaux['cout_total'] += $row['cout_total'] ?? 0;
-            $totaux['benefice'] += $row['benefice'] ?? 0;
+            $ca = $row['chiffreAffaires'] ?? $row['ca_total'] ?? 0;
+            $coutLivreur = $row['coutLivreur'] ?? 0;
+            $coutVehicule = $row['coutVehicule'] ?? 0;
+            $coutTotal = $coutLivreur + $coutVehicule;
+            
+            $totaux['nb_livraisons']++;
+            $totaux['ca_total'] += $ca;
+            $totaux['cout_total'] += $coutTotal;
+            $totaux['benefice'] += ($ca - $coutTotal);
         }
 
         return $totaux;

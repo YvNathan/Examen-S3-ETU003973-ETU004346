@@ -23,7 +23,7 @@
       <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
       <nav class="topbar__actions">
         <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-        <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
+        <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
       </nav>
     </div>
   </header>
@@ -36,8 +36,13 @@
       <a class="sidebar__link is-active" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
       <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
       <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+<<<<<<< HEAD
        <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
 
+=======
+      <a class="sidebar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices par véhicule</a>
+      <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
+>>>>>>> 1b08a29deadf16ff1312ceaa660aa9be8c2b53ab
     </aside>
 
     <main class="page">
@@ -47,7 +52,7 @@
 
         <?php if (!empty($error)) : ?>
           <div class="alert alert-error">
-            <?= htmlspecialchars($error) ?>
+            <?= $error ?>
           </div>
         <?php endif; ?>
 
@@ -66,7 +71,7 @@
                   <option value="">-- Choisir --</option>
                   <?php if (!empty($livreurs)) : ?>
                     <?php foreach ($livreurs as $l) : ?>
-                      <option value="<?= $l['id'] ?>"><?= htmlspecialchars($l['nom']) ?></option>
+                      <option value="<?= $l['id'] ?>"><?= $l['nom'] ?></option>
                     <?php endforeach; ?>
                   <?php endif; ?>
                 </select>
@@ -76,7 +81,7 @@
                 <select name="idVehicule" required>
                   <option value="">-- Choisir --</option>
                   <?php foreach ($vehicules as $v) : ?>
-                    <option value="<?= $v['id'] ?>"><?= htmlspecialchars($v['immatriculation']) ?> - <?= htmlspecialchars($v['modele']) ?></option>
+                    <option value="<?= $v['id'] ?>"><?= $v['immatriculation'] ?> - <?= $v['modele'] ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>
@@ -103,10 +108,10 @@
                 <tbody>
                   <?php foreach ($colis as $c) : ?>
                     <tr>
-                      <td><?= htmlspecialchars($c['descrip']) ?></td>
-                      <td><?= htmlspecialchars($c['destinataire'] ?? 'N/A') ?></td>
-                      <td><?= htmlspecialchars($c['poids_Kg']) ?></td>
-                      <td><?= htmlspecialchars($c['adrDestination'] ?? 'N/A') ?></td>
+                      <td><?= $c['descrip'] ?></td>
+                      <td><?= $c['destinataire'] ?? 'N/A' ?></td>
+                      <td><?= $c['poids_Kg'] ?></td>
+                      <td><?= $c['adrDestination'] ?? 'N/A' ?></td>
                       <td>
                         <button type="button" class="btn-select" onclick="selectColis(<?= $c['id'] ?>, this)">Sélectionner</button>
                       </td>
@@ -136,7 +141,7 @@
                   <?php if (!empty($zones)) : ?>
                     <?php foreach ($zones as $z) : ?>
                       <option value="<?= $z['id'] ?>">
-                        <?= htmlspecialchars($z['nom']) ?> 
+                        <?= $z['nom'] ?> 
                         (<?= number_format($z['pourcentage'], 2) ?>%)
                       </option>
                     <?php endforeach; ?>

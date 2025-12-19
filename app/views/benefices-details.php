@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails des livraisons</title>
     <?php
-        $basePath = rtrim($baseUrl ?? BASE_URL ?? '', '/');
-        if ($basePath === '/') {
-            $basePath = '';
-        }
-        $base = htmlspecialchars($basePath, ENT_QUOTES);
+    $basePath = rtrim($baseUrl ?? BASE_URL ?? '', '/');
+    if ($basePath === '/') {
+        $basePath = '';
+    }
+    $base = htmlspecialchars($basePath, ENT_QUOTES);
     ?>
     <link rel="stylesheet" href="<?= $base ?>/assets/styles.css">
     <style>
@@ -30,7 +31,8 @@
             font-size: 0.85rem;
         }
 
-        th, td {
+        th,
+        td {
             padding: 0.65rem 0.5rem;
             text-align: left;
             border: 1px solid #ddd;
@@ -116,17 +118,19 @@
         }
     </style>
 </head>
-<body class="app-shell">
-<header class="topbar">
-    <div class="topbar__inner">
-        <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
-        <nav class="topbar__actions">
-            <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-            <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
-        </nav>
-    </div>
-</header>
 
+<body class="app-shell">
+    <header class="topbar">
+        <div class="topbar__inner">
+            <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
+            <nav class="topbar__actions">
+                <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
+                <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
+            </nav>
+        </div>
+    </header>
+
+<<<<<<< HEAD
 <div class="app-grid">
     <aside class="sidebar">
         <div class="sidebar__title">Navigation</div>
@@ -137,121 +141,119 @@
         <a class="sidebar__link is-active" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
         <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
     </aside>
+=======
+    <div class="app-grid">
+        <aside class="sidebar">
+            <div class="sidebar__title">Navigation</div>
+            <a class="sidebar__link" href="<?= $base ?: '/accueil' ?>">Accueil</a>
+            <a class="sidebar__link" href="<?= $base ?>/statut">Statuts des livraisons</a>
+            <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
+            <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
+            <a class="sidebar__link is-active" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+            <a class="sidebar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices par véhicule</a>
+            <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
+        </aside>
+>>>>>>> 1b08a29deadf16ff1312ceaa660aa9be8c2b53ab
 
-    <main class="page">
-        <div class="container">
-            <h1>Détails des livraisons</h1>
+        <main class="page">
+            <div class="container">
+                <h1>Détails des livraisons</h1>
 
-            <?php
-            // Calcul des statistiques globales
-            $totalLivraisons = count($benefices ?? []);
-            $totalCA = 0;
-            $totalCouts = 0;
-            $totalBenefice = 0;
+                <?php if (!empty($totaux) && $totaux['nb_livraisons'] > 0): ?>
+                    <div class="stats-summary">
+                        <div class="stat-item">
+                            <h3>Total Livraisons</h3>
+                            <div class="value"><?= number_format($totaux['nb_livraisons']) ?></div>
+                        </div>
+                        <div class="stat-item">
+                            <h3>CA Total (Ar)</h3>
+                            <div class="value"><?= number_format($totaux['ca_total'], 2) ?></div>
+                        </div>
+                        <div class="stat-item">
+                            <h3>Coûts Totaux (Ar)</h3>
+                            <div class="value"><?= number_format($totaux['cout_total'], 2) ?></div>
+                        </div>
+                        <div class="stat-item">
+                            <h3>Bénéfice Total (Ar)</h3>
+                            <div class="value"><?= number_format($totaux['benefice'], 2) ?></div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
-            if (!empty($benefices)) {
-                foreach ($benefices as $row) {
-                    $totalCA += $row['chiffreAffaires'] ?? 0;
-                    $totalCouts += ($row['coutLivreur'] ?? 0) + ($row['coutVehicule'] ?? 0);
-                    $totalBenefice += ($row['chiffreAffaires'] ?? 0) - (($row['coutLivreur'] ?? 0) + ($row['coutVehicule'] ?? 0));
-                }
-            }
-
-            $margeGlobale = $totalCA > 0 ? ($totalBenefice / $totalCA * 100) : 0;
-            ?>
-
-            <?php if ($totalLivraisons > 0): ?>
-            <div class="stats-summary">
-                <div class="stat-item">
-                    <h3>Total Livraisons</h3>
-                    <div class="value"><?= number_format($totalLivraisons) ?></div>
+                <?php if (!empty($benefices) && is_array($benefices)) : ?>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Colis</th>
+                                <th class="text-right">Poids (Kg)</th>
+                                <th class="text-right">Prix/Kg (Ar)</th>
+                                <th>Zone</th>
+                                <th class="text-right">Suppl. (%)</th>
+                                <th class="text-right">Montant suppl. (Ar)</th>
+                                <th class="text-right">CA (Ar)</th>
+                                <th class="text-right">Coût véhicule (Ar)</th>
+                                <th class="text-right">Salaire livreur (Ar)</th>
+                                <th class="text-right">Coût total (Ar)</th>
+                                <th class="text-right">Bénéfice (Ar)</th>
+                                <th>Livreur</th>
+                                <th>Véhicule</th>
+                                <th>Date paiement</th>
+                                <th class="text-center">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($benefices as $row):
+                                $ca = $row['chiffreAffaires'] ?? 0;
+                                $coutTotal = ($row['coutLivreur'] ?? 0) + ($row['coutVehicule'] ?? 0);
+                                $benefice = $ca - $coutTotal;
+                                $prixKg = $row['prixKg'] ?? 0;
+                                $poids = $row['poids_Kg'] ?? 0;
+                                $pourcentage = $row['supplement_pourcentage'] ?? 0;
+                                $prixBase = $prixKg * $poids;
+                                $montantSupplement = $prixBase * ($pourcentage / 100);
+                            ?>
+                                <tr>
+                                    <td><?= $row['dateLivraison'] ?? '' ?></td>
+                                    <td><?= $row['colis'] ?? '' ?></td>
+                                    <td class="text-right"><?= number_format($poids, 2) ?></td>
+                                    <td class="text-right"><?= number_format($prixKg, 2) ?></td>
+                                    <td><?= $row['zone_livraison'] ?? '-' ?></td>
+                                    <td class="text-right"><?= number_format($pourcentage, 2) ?> %</td>
+                                    <td class="text-right"><?= number_format($montantSupplement, 2) ?></td>
+                                    <td class="text-right"><?= number_format($ca, 2) ?></td>
+                                    <td class="text-right"><?= number_format($row['coutVehicule'] ?? 0, 2) ?></td>
+                                    <td class="text-right"><?= number_format($row['coutLivreur'] ?? 0, 2) ?></td>
+                                    <td class="text-right"><?= number_format($coutTotal, 2) ?></td>
+                                    <td class="text-right <?= $benefice >= 0 ? 'positive' : 'negative' ?>">
+                                        <?= number_format($benefice, 2) ?>
+                                    </td>
+                                    <td><?= $row['livreur'] ?? '' ?></td>
+                                    <td><?= $row['vehicule'] ?? '' ?></td>
+                                    <td><?= htmlspecialchars($row['datePaiement'] ?? '-') ?></td>
+                                    <td class="text-center">
+                                        <span class="badge <?= ($row['statut'] ?? '') === 'Livré' ? 'badge-success' : 'badge-danger' ?>">
+                                            <?= $row['statut'] ?? '' ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="stat-item">
-                    <h3>CA Total</h3>
-                    <div class="value"><?= number_format($totalCA, 2) ?> €</div>
-                </div>
-                <div class="stat-item">
-                    <h3>Coûts Totaux</h3>
-                    <div class="value"><?= number_format($totalCouts, 2) ?> €</div>
-                </div>
-                <div class="stat-item">
-                    <h3>Bénéfice Total</h3>
-                    <div class="value"><?= number_format($totalBenefice, 2) ?> €</div>
-                </div>
-                <div class="stat-item">
-                    <h3>Marge Moyenne</h3>
-                    <div class="value"><?= number_format($margeGlobale, 1) ?> %</div>
-                </div>
-            </div>
-            <?php endif; ?>
-
-            <?php if (!empty($benefices) && is_array($benefices)) : ?>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Colis</th>
-                            <th class="text-right">Poids (Kg)</th>
-                            <th class="text-right">Prix/Kg</th>
-                            <th class="text-right">CA</th>
-                            <th class="text-right">Coût véhicule</th>
-                            <th class="text-right">Salaire livreur</th>
-                            <th class="text-right">Coût total</th>
-                            <th class="text-right">Bénéfice</th>
-                            <th class="text-right">Marge</th>
-                            <th>Livreur</th>
-                            <th>Véhicule</th>
-                            <th>Date paiement</th>
-                            <th class="text-center">Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($benefices as $row): 
-                            $ca = $row['chiffreAffaires'] ?? 0;
-                            $coutTotal = ($row['coutLivreur'] ?? 0) + ($row['coutVehicule'] ?? 0);
-                            $benefice = $ca - $coutTotal;
-                            $marge = $ca > 0 ? ($benefice / $ca * 100) : 0;
-                        ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['dateLivraison'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($row['colis'] ?? '') ?></td>
-                            <td class="text-right"><?= number_format($row['poids_Kg'] ?? 0, 2) ?></td>
-                            <td class="text-right"><?= number_format($row['prixKg'] ?? 0, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($ca, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($row['coutVehicule'] ?? 0, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($row['coutLivreur'] ?? 0, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($coutTotal, 2) ?> €</td>
-                            <td class="text-right <?= $benefice >= 0 ? 'positive' : 'negative' ?>">
-                                <?= number_format($benefice, 2) ?> €
-                            </td>
-                            <td class="text-right <?= $marge >= 0 ? 'positive' : 'negative' ?>">
-                                <?= number_format($marge, 1) ?> %
-                            </td>
-                            <td><?= htmlspecialchars($row['livreur'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($row['vehicule'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($row['datePaiement'] ?? '-') ?></td>
-                            <td class="text-center">
-                                <span class="badge <?= ($row['statut'] ?? '') === 'Livré' ? 'badge-success' : 'badge-danger' ?>">
-                                    <?= htmlspecialchars($row['statut'] ?? '') ?>
-                                </span>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
             <?php else : ?>
                 <p class="empty">Aucune livraison à afficher.</p>
             <?php endif; ?>
 
-        </div>
+    </div>
     </main>
-</div>
-</main>
-</div>
+    </div>
+    </main>
+    </div>
     <footer class="footer-main">
-        &copy; 2025 ETU003973-ETU004346 
+        &copy; 2025 ETU003973-ETU004346
     </footer>
 </body>
+
 </html>

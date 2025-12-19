@@ -53,9 +53,12 @@ class BeneficeController
     {
         $model = new Benefice(Flight::db());
         $benefices = $model->getBeneficesDetailles();
+        
+        $totaux = $model->calculerTotaux($benefices);
 
         $this->app->render('benefices-details', [
             'benefices' => $benefices,
+            'totaux' => $totaux,
             'baseUrl' => Flight::get('flight.base_url'),
         ]);
     }
