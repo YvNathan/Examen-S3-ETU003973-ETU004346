@@ -102,7 +102,7 @@ SELECT
     c.descrip AS colis,
     c.poids_Kg,
     l.prixKg,
-    l.prixKg * c.poids_Kg * (1 + COALESCE(z.pourcentage, 0)/100) AS prixLivraisonAvecSupplement,
+    l.prixKg * c.poids_Kg * (1 + COALESCE(z.pourcentage, 0)/100) AS prixLivraisonAvecSupplement,  --supplement 
     a.coutLivreur,
     a.coutVehicule,
     p.prix AS chiffreAffaires,
@@ -122,7 +122,7 @@ LEFT JOIN lvr_paiement p ON p.idLivraison = l.id
 JOIN lvr_livraisonStatut ls ON ls.idLivraison = l.id
     AND ls.dateStatut = (SELECT MAX(dateStatut) FROM lvr_livraisonStatut ls2 WHERE ls2.idLivraison = l.id)
 JOIN lvr_statut s ON s.id = ls.idStatut
-WHERE ls.idStatut IN (2, 3);  -- Ajuste selon tes statuts (ex: 2=Livré, 3=Payé)
+WHERE ls.idStatut IN (2, 3); 
 
 
 -- BÉNÉFICES PAR Jour

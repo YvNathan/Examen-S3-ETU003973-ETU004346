@@ -35,11 +35,12 @@ class Benefice
             $conditions[] = 'jour = ?';
             $params[] = $jour;
 
+
             $sql = "
             SELECT *
             FROM v_lvr_benefices_jour
             WHERE " . implode(' AND ', $conditions) . "
-            ORDER BY date DESC
+            ORDER BY jour DESC
         ";
 
             return $this->execute($sql, $params);
@@ -60,7 +61,7 @@ class Benefice
         }
 
         return $this->execute(
-            "SELECT * FROM v_lvr_benefices_jour ORDER BY date DESC"
+            "SELECT * FROM v_lvr_benefices_jour ORDER BY jour DESC"
         );
     }
 

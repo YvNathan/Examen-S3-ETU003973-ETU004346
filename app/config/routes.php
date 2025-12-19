@@ -1,8 +1,11 @@
+
 <?php
 
 use app\controllers\StatutController;
 use app\controllers\LivraisonController;
 use app\controllers\BeneficeController;
+use app\controllers\ZoneController;
+
 use flight\Engine;
 use flight\net\Router;
 
@@ -27,6 +30,33 @@ $router->group('', function (Router $router) use ($app) {
 		$statutcontroller->getStatutLivraison();
 	});
 
+	$router->get('/zones', function () use ($app) {
+	$controller = new ZoneController($app);
+	$controller->index();
+});
+
+$router->get('/zones/add', function () use ($app) {
+	$controller = new ZoneController($app);
+	$controller->add();
+});
+$router->post('/zones/add', function () use ($app) {
+	$controller = new ZoneController($app);
+	$controller->add();
+});
+
+$router->get('/zones/edit/(\d+)', function ($id) use ($app) {
+	$controller = new ZoneController($app);
+	$controller->edit($id);
+});
+$router->post('/zones/edit/(\d+)', function ($id) use ($app) {
+	$controller = new ZoneController($app);
+	$controller->edit($id);
+});
+
+$router->get('/zones/delete/(\d+)', function ($id) use ($app) {
+	$controller = new ZoneController($app);
+	$controller->delete($id);
+});
 	$router->post('/statut/achever', function () use ($app) {
 		$statutcontroller = new StatutController($app);
 		$idLivraison = $_POST['idLivraison'] ?? null;
