@@ -14,12 +14,10 @@ use flight\net\Router;
 
 $router->group('', function (Router $router) use ($app) {
 
-	// Page d'accueil minimaliste (bouton Accéder)
 	$router->get('/', function () use ($app) {
 		$app->render('landing');
 	});
 
-	// Espace de l'application (avec sidebar/nav)
 	$router->get('/app', function () use ($app) {
 		$app->render('index');
 	});
@@ -49,25 +47,18 @@ $router->group('', function (Router $router) use ($app) {
         $controller->nouveau();		
     });
 
-    // Enregistrer la livraison
     $router->post('/livraisons/nouveau', function () use ($app) {
         $controller = new LivraisonController($app);
         $controller->enregistrer();
     });
 
-	// Page principale des bénéfices avec filtres par période
 	$router->get('/benefices', function () use ($app) {
 		$controller = new BeneficeController($app);
 		$controller->index();
 	});
 
-	// Page des détails complets de toutes les livraisons
 	$router->get('/benefices/details', function () use ($app) {
 		$controller = new BeneficeController($app);
 		$controller->details();
-	});
-
-    // (Login supprimé selon demande)
-
-	
+	});	
 });
