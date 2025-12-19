@@ -76,17 +76,18 @@ CREATE TABLE lvr_paiement (
     FOREIGN KEY (idLivraison) REFERENCES lvr_livraison(id)
 );
 
-/* =========================
-   Verif Colis dispo
-========================= */
+
+
+
+--Verif Colis dispo
 CREATE OR REPLACE VIEW v_lvr_colisDisponibles AS
 SELECT *
 FROM lvr_colis
 WHERE id NOT IN (SELECT idColis FROM lvr_livraison WHERE idColis IS NOT NULL);
 
-/* =========================
-   Trigger 
-========================= */
+
+
+-- Trigger new livraison
 DELIMITER //
 CREATE TRIGGER trg_lvr_new_livraison
 AFTER INSERT ON lvr_livraison
@@ -97,9 +98,8 @@ BEGIN
 END//
 DELIMITER ;
 
-/* ==============================
-    Procedure: Ajouter livraison
-================================ */
+
+-- Procedure: Ajouter livraison
 DELIMITER //
 CREATE OR REPLACE PROCEDURE p_lvr_new_livraison(
     IN p_idVehicule INT,
@@ -147,9 +147,9 @@ BEGIN
 END//
 DELIMITER ;
 
-/* ================================
-   Procedure : Confirmer livraison 
-=============================== */
+
+
+-- Procedure : Confirmer livraison 
 DELIMITER //
 CREATE OR REPLACE PROCEDURE p_gestion_statut (
     IN p_idLivraison INT,
@@ -209,9 +209,9 @@ BEGIN
 END//
 DELIMITER ;
 
-/* =========================
-  Annuler livraison
-========================= */
+
+
+--Annuler livraison
 DELIMITER //
 CREATE OR REPLACE PROCEDURE p_annuler_livraison (
     IN p_idLivraison INT
@@ -222,9 +222,9 @@ BEGIN
 END//
 DELIMITER ;
 
-/* =========================
-   BÉNÉFICES Global
-========================= */
+
+
+-- BÉNÉFICES Global
 CREATE OR REPLACE VIEW v_lvr_benefices AS
 SELECT
     l.id AS idLivraison,
@@ -254,9 +254,8 @@ WHERE ls.idStatut IN (2, 3);
 
 
 
-/* =========================
-   BÉNÉFICES PAR Jour
-========================= */
+
+-- BÉNÉFICES PAR Jour
 CREATE OR REPLACE VIEW v_lvr_benefices_jour AS
 SELECT
     DATE(dateLivraison) AS jour,
@@ -269,9 +268,8 @@ GROUP BY jour
 ORDER BY jour DESC;
 
 
-/* =========================
-   BÉNÉFICES PAR MOIS
-========================= */
+
+-- BÉNÉFICES PAR MOIS
 CREATE OR REPLACE VIEW v_lvr_benefices_mois AS
 SELECT
     YEAR(dateLivraison) AS annee,
@@ -285,9 +283,7 @@ GROUP BY annee, mois
 ORDER BY annee DESC, mois DESC;
 
 
-/* =========================
-   BÉNÉFICES PAR ANNÉE
-========================= */
+-- BÉNÉFICES PAR ANNÉE
 CREATE OR REPLACE VIEW v_lvr_benefices_annee AS
 SELECT
     YEAR(dateLivraison) AS annee,
@@ -300,9 +296,7 @@ GROUP BY annee
 ORDER BY annee DESC;
 
 
-/* =========================
-   BÉNÉFICES PAR date
-========================= */
+-- BÉNÉFICES PAR date
 CREATE OR REPLACE VIEW v_lvr_benefices_date AS
 SELECT
     DATE(dateLivraison) AS date,
@@ -317,9 +311,7 @@ FROM v_lvr_benefices
 GROUP BY DATE(dateLivraison);
 
 
-/* =========================
-   STATUT ACTUEL DES LIVRAISONS
-========================= */
+-- STATUT ACTUEL DES LIVRAISONS
 CREATE OR REPLACE VIEW v_getStatusLivraison AS
 SELECT
     l.id AS idLivraison,
