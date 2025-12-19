@@ -13,7 +13,7 @@
   $base = htmlspecialchars($basePath, ENT_QUOTES);
   ?>
   <link rel="stylesheet" href="<?= $base ?>/assets/styles.css">
- 
+
   </style>
 </head>
 
@@ -57,7 +57,7 @@
           </div>
         <?php endif; ?>
 
-        <form action="<?= $base ?>/livraisons/nouveau" method="post">
+        <form action="" method="post">
           <div class="section">
             <div class="form-grid">
               <div class="form-group">
@@ -136,7 +136,7 @@
                   <?php if (!empty($zones)) : ?>
                     <?php foreach ($zones as $z) : ?>
                       <option value="<?= $z['id'] ?>">
-                        <?= $z['nom'] ?> 
+                        <?= $z['nom'] ?>
                         (<?= number_format($z['pourcentage'], 2) ?>%)
                       </option>
                     <?php endforeach; ?>
@@ -168,10 +168,10 @@
       document.getElementById('selectedColis').value = id;
     }
   </script>
-</main>
-</div>
+  </main>
+  </div>
   <footer class="footer-main">
-    &copy; 2025 ETU003973-ETU004346 
+    &copy; 2025 ETU003973-ETU004346
   </footer>
 </body>
 
