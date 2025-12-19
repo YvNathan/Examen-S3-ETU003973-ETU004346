@@ -42,3 +42,10 @@ INSERT INTO lvr_statut (descrip) VALUES
 ('En attente'),
 ('Livré'),
 ('Annulée');
+
+INSERT INTO lvr_colis (descrip, destinataire, contact, poids_Kg, adrDestination) VALUES
+('Carton de vêtements', 'Rasoamiaramanana Holy', '034 56 789 01', 12.5, 'Lot II Y 45 Bis Anjanahary'),
+('Paquet de livres scolaires', 'Razafindrakoto Lala', '033 12 345 67', 8.0, '67 Ha Sud Antsahabe'),
+('Colis fragile - Verres et vaisselle', 'Andriamahazo Mirana', '032 98 765 43', 15.0, 'Imerinafovoany Talatamaty'),
+('Sac de riz 25kg', 'Rakotondrainibe Thierry', '034 00 111 22', 25.0, 'Anosiala Ambohidratrimo'),
+('Boîte d\'électroménager (mixeur)', 'Rasoloarisoa Nantenaina', '033 44 555 66', 4.5, 'Androndra Antananarivo Centre');

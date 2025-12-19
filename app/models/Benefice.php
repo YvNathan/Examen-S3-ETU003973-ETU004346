@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-
 class Benefice
 {
     private $db;
@@ -37,8 +36,11 @@ class Benefice
                 $params[] = $jour;
             }
 
-            $where = empty($conditions) ? '' : 'WHERE ' . implode(' AND ', $conditions);
-            $sql = "SELECT * FROM v_lvr_benefices_periode $where ORDER BY date DESC";
+
+            $sql = "
+            SELECT *
+            FROM v_lvr_benefices_jour
+            WHERE " . implode(' AND ', $conditions) .;
 
             return $this->execute($sql, $params);
         }
@@ -57,7 +59,7 @@ class Benefice
             );
         }
         return $this->execute(
-            "SELECT * FROM v_lvr_benefices_jour ORDER BY date DESC"
+            "SELECT * FROM v_lvr_benefices_jour ORDER BY jour DESC"
         );
     }
 
