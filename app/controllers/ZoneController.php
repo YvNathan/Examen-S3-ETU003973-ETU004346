@@ -75,23 +75,9 @@ class ZoneController
     public function delete($id)
     {
         $model = new Zone($this->app->db());
-
-        // Réaffectation des affectations (tu mets idZone = 6 pour "inexistant")
         $this->app->db()->prepare("UPDATE lvr_affectation SET idZone = 6 WHERE idZone = ?")
                        ->execute([$id]);
-
-        // Optionnel : réaffecter les colis si jamais tu en avais (mais tu n'as plus idZone dans colis)
-        // $model->reaffectColisToInexistant($id);
-
-        // Suppression de la zone
         $model->delete($id);
-
-        // Recharger la liste et afficher un message de succès
-        $zones = $model->getZones();
-
-        $this->app->render('zone-list', [
-            'zones' => $zones,
-            'message' => 'Zone supprimée avec succès.'
-        ]);
+        $this->app->redirect('/zones');
     }
 }
