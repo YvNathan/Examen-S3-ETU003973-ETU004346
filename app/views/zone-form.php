@@ -21,7 +21,7 @@
             <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>">AizA</a></div>
             <nav class="topbar__actions">
                 <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
-                <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
+                <a class="topbar__link" href="<?= $base ?>/reinit">Réinitialiser</a>
             </nav>
         </div>
     </header>
