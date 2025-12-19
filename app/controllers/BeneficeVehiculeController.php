@@ -31,7 +31,6 @@ class BeneficeVehiculeController
         $model = new BeneficeVehicule(Flight::db());
         $details = $model->getDetails($idVehicule);
 
-        // Totaux
         $totaux = [
             'ca' => 0,
             'coutVehicule' => 0,

@@ -13,7 +13,6 @@ class ZoneController
         $this->app = $app;
     }
 
-    // Liste des zones
     public function index()
     {
         $model = new Zone($this->app->db());
@@ -22,7 +21,6 @@ class ZoneController
         $this->app->render('zone/zone-list', ['zones' => $zones]);
     }
 
-    // Formulaire ajout
     public function add()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -42,7 +40,6 @@ class ZoneController
         ]);
     }
 
-    // Édition
     public function edit($id)
     {
         $model = new Zone($this->app->db());
@@ -68,7 +65,6 @@ class ZoneController
         ]);
     }
 
-    // Suppression
     public function delete($id)
     {
         $model = new Zone($this->app->db());

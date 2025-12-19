@@ -78,7 +78,6 @@ class Benefice
         }
 
         foreach ($benefices as $row) {
-            // Vérifier les différentes clés possibles pour la compatibilité
             $ca = $row['chiffreAffaires'] ?? $row['ca_total'] ?? 0;
             $coutLivreur = $row['coutLivreur'] ?? 0;
             $coutVehicule = $row['coutVehicule'] ?? 0;
