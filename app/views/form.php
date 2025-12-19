@@ -94,10 +94,6 @@
                   <input type="number" step="0.01" name="coutVehicule" required>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Coût livreur</label>
-                  <input type="number" step="0.01" name="coutLivreur" required>
-                </div>
-                <div class="form-group">
                   <label class="form-label">Prix par Kg</label>
                   <input type="number" step="0.01" name="prixKg" required>
                 </div>

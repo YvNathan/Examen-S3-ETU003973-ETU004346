@@ -13,12 +13,23 @@ class Livraison
         $this->db = $db;
     }
 
-    public function creer($idVehicule, $idLivreur, $coutVehicule, $coutLivreur, $idColis, $prixKg, $dateLivraison)
+    public function creer($idVehicule, $idLivreur, $coutVehicule, $idColis, $prixKg, $dateLivraison)
     {
         try {
-            if ($coutVehicule < 0 || $coutLivreur < 0 || $prixKg < 0) {
+            if ($coutVehicule < 0 || $prixKg < 0) {
                 throw new Exception('Les montants ne peuvent pas être négatifs');
             }
+
+            $stmtLivreur = $this->db->prepare('SELECT salaire FROM lvr_livreur WHERE id = ?');
+            $stmtLivreur->execute([$idLivreur]);
+            $salaire = $stmtLivreur->fetchColumn();
+            if ($salaire === false) {
+                throw new Exception('Livreur introuvable');
+            }
+            if ($salaire < 0) {
+                throw new Exception('Salaire livreur invalide');
+            }
+            $coutLivreur = (float) $salaire;
 
             $check = $this->db->prepare('SELECT 1 FROM lvr_livraison WHERE idColis = ? LIMIT 1');
             $check->execute([$idColis]);

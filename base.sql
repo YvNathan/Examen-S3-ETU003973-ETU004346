@@ -113,8 +113,6 @@ JOIN lvr_statut s ON s.id = ls.idStatut
 WHERE ls.idStatut IN (2, 3);
 
 
-
-
 -- BÉNÉFICES PAR Jour
 CREATE OR REPLACE VIEW v_lvr_benefices_jour AS
 SELECT
@@ -185,8 +183,10 @@ JOIN lvr_statut s ON ls.idStatut = s.id
 JOIN lvr_livraison l ON ls.idLivraison = l.id
 JOIN lvr_colis c ON l.idColis = c.id
 LEFT JOIN lvr_zone z ON z.id = c.idZone
-WHERE ls.dateStatut = (
-    SELECT MAX(ls2.dateStatut)
+WHERE ls.id = (
+    SELECT ls2.id
     FROM lvr_livraisonStatut ls2
     WHERE ls2.idLivraison = l.id
+    ORDER BY ls2.dateStatut DESC, ls2.id DESC
+    LIMIT 1
 );
