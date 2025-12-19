@@ -36,13 +36,8 @@
       <a class="sidebar__link is-active" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
       <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
       <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
-<<<<<<< HEAD
-       <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
-
-=======
       <a class="sidebar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices par véhicule</a>
       <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
->>>>>>> 1b08a29deadf16ff1312ceaa660aa9be8c2b53ab
     </aside>
 
     <main class="page">

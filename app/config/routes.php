@@ -5,11 +5,8 @@ use app\controllers\LivraisonController;
 use app\controllers\BeneficeController;
 use app\controllers\BeneficeVehiculeController;
 use app\controllers\ZoneController;
-<<<<<<< HEAD
-=======
 use app\controllers\ReinitController;
 
->>>>>>> 1b08a29deadf16ff1312ceaa660aa9be8c2b53ab
 use flight\Engine;
 use flight\net\Router;
 
@@ -98,8 +95,6 @@ $router->group('', function (Router $router) use ($app) {
         $controller->details();
     });
 
-<<<<<<< HEAD
-=======
 	$router->get('/benefices/details', function () use ($app) {
 		$controller = new BeneficeController($app);
 		$controller->details();
@@ -124,5 +119,4 @@ $router->group('', function (Router $router) use ($app) {
 		$controller = new ReinitController($app);
 		$controller->execute();
 	});
->>>>>>> 1b08a29deadf16ff1312ceaa660aa9be8c2b53ab
 });

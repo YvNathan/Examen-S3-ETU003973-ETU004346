@@ -130,18 +130,6 @@
         </div>
     </header>
 
-<<<<<<< HEAD
-<div class="app-grid">
-    <aside class="sidebar">
-        <div class="sidebar__title">Navigation</div>
-        <a class="sidebar__link" href="<?= $base ?: '/accueil' ?>">Accueil</a>
-        <a class="sidebar__link" href="<?= $base ?>/statut">Statuts des livraisons</a>
-        <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
-        <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
-        <a class="sidebar__link is-active" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
-        <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
-    </aside>
-=======
     <div class="app-grid">
         <aside class="sidebar">
             <div class="sidebar__title">Navigation</div>
@@ -153,7 +141,6 @@
             <a class="sidebar__link" href="<?= $base ?>/benefices/vehicules">Bénéfices par véhicule</a>
             <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
         </aside>
->>>>>>> 1b08a29deadf16ff1312ceaa660aa9be8c2b53ab
 
         <main class="page">
             <div class="container">
