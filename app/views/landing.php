@@ -19,6 +19,9 @@
       <a class="cta" href="/app">Accéder</a>
     </div>
   </section>
+  <footer class="footer-main">
+    &copy; 2025 ETU003973-ETU004346
+  </footer>
 </body>
 
 </html>

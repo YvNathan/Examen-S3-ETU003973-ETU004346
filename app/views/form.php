@@ -165,6 +165,11 @@
       document.getElementById('selectedColis').value = id;
     }
   </script>
+</main>
+</div>
+  <footer class="footer-main">
+    &copy; 2025 ETU003973-ETU004346 
+  </footer>
 </body>
 
 </html>

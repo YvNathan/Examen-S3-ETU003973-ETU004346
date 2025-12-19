@@ -146,10 +146,9 @@
             </div>
         </main>
     </div>
-
-    <footer>
-        &copy; 2025 Rojo Logistique — Tous droits réservés
-    </footer>
-</body>
-
+ <footer class="footer-main">
+    &copy; 2025 ETU003973-ETU004346 
+  </footer>
+</main>
 </html>
+    

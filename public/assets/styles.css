@@ -1,4 +1,30 @@
 /* =========================
+   FOOTER PRINCIPAL
+========================= */
+
+.footer-main {
+    width: 100%;
+    background: linear-gradient(90deg, #0a1530 0%, #143a6d 100%);
+    color: #f8fafc;
+    text-align: center;
+    padding: 1.1rem 0 1.1rem 0;
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    box-shadow: 0 -2px 18px rgba(20, 58, 109, 0.18);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    border-top: 2px solid #1f6feb;
+    text-shadow: 0 1px 2px #0008;
+    transition: background 0.3s;
+}
+
+body, .app-shell {
+    padding-bottom: 70px !important; /* Pour ne pas masquer le contenu par le footer */
+}
+/* =========================
      PAGE LANDING (landing.php)
 ========================= */
 body,
