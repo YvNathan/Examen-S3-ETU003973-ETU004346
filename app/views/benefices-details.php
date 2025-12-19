@@ -166,20 +166,16 @@
                     <div class="value"><?= number_format($totalLivraisons) ?></div>
                 </div>
                 <div class="stat-item">
-                    <h3>CA Total</h3>
-                    <div class="value"><?= number_format($totalCA, 2) ?> €</div>
+                    <h3>CA Total (Ar)</h3>
+                    <div class="value"><?= number_format($totalCA, 2) ?></div>
                 </div>
                 <div class="stat-item">
-                    <h3>Coûts Totaux</h3>
-                    <div class="value"><?= number_format($totalCouts, 2) ?> €</div>
+                    <h3>Coûts Totaux (Ar)</h3>
+                    <div class="value"><?= number_format($totalCouts, 2) ?></div>
                 </div>
                 <div class="stat-item">
-                    <h3>Bénéfice Total</h3>
-                    <div class="value"><?= number_format($totalBenefice, 2) ?> €</div>
-                </div>
-                <div class="stat-item">
-                    <h3>Marge Moyenne</h3>
-                    <div class="value"><?= number_format($margeGlobale, 1) ?> %</div>
+                    <h3>Bénéfice Total (Ar)</h3>
+                    <div class="value"><?= number_format($totalBenefice, 2) ?></div>
                 </div>
             </div>
             <?php endif; ?>
@@ -192,13 +188,15 @@
                             <th>Date</th>
                             <th>Colis</th>
                             <th class="text-right">Poids (Kg)</th>
-                            <th class="text-right">Prix/Kg</th>
-                            <th class="text-right">CA</th>
-                            <th class="text-right">Coût véhicule</th>
-                            <th class="text-right">Salaire livreur</th>
-                            <th class="text-right">Coût total</th>
-                            <th class="text-right">Bénéfice</th>
-                            <th class="text-right">Marge</th>
+                            <th class="text-right">Prix/Kg (Ar)</th>
+                            <th>Zone</th>
+                            <th class="text-right">Suppl. (%)</th>
+                            <th class="text-right">Montant suppl. (Ar)</th>
+                            <th class="text-right">CA (Ar)</th>
+                            <th class="text-right">Coût véhicule (Ar)</th>
+                            <th class="text-right">Salaire livreur (Ar)</th>
+                            <th class="text-right">Coût total (Ar)</th>
+                            <th class="text-right">Bénéfice (Ar)</th>
                             <th>Livreur</th>
                             <th>Véhicule</th>
                             <th>Date paiement</th>
@@ -210,22 +208,26 @@
                             $ca = $row['chiffreAffaires'] ?? 0;
                             $coutTotal = ($row['coutLivreur'] ?? 0) + ($row['coutVehicule'] ?? 0);
                             $benefice = $ca - $coutTotal;
-                            $marge = $ca > 0 ? ($benefice / $ca * 100) : 0;
+                            $prixKg = $row['prixKg'] ?? 0;
+                            $poids = $row['poids_Kg'] ?? 0;
+                            $pourcentage = $row['supplement_pourcentage'] ?? 0;
+                            $prixBase = $prixKg * $poids;
+                            $montantSupplement = $prixBase * ($pourcentage / 100);
                         ?>
                         <tr>
                             <td><?= htmlspecialchars($row['dateLivraison'] ?? '') ?></td>
                             <td><?= htmlspecialchars($row['colis'] ?? '') ?></td>
-                            <td class="text-right"><?= number_format($row['poids_Kg'] ?? 0, 2) ?></td>
-                            <td class="text-right"><?= number_format($row['prixKg'] ?? 0, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($ca, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($row['coutVehicule'] ?? 0, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($row['coutLivreur'] ?? 0, 2) ?> €</td>
-                            <td class="text-right"><?= number_format($coutTotal, 2) ?> €</td>
+                            <td class="text-right"><?= number_format($poids, 2) ?></td>
+                            <td class="text-right"><?= number_format($prixKg, 2) ?></td>
+                            <td><?= htmlspecialchars($row['zone_livraison'] ?? '-') ?></td>
+                            <td class="text-right"><?= number_format($pourcentage, 2) ?> %</td>
+                            <td class="text-right"><?= number_format($montantSupplement, 2) ?></td>
+                            <td class="text-right"><?= number_format($ca, 2) ?></td>
+                            <td class="text-right"><?= number_format($row['coutVehicule'] ?? 0, 2) ?></td>
+                            <td class="text-right"><?= number_format($row['coutLivreur'] ?? 0, 2) ?></td>
+                            <td class="text-right"><?= number_format($coutTotal, 2) ?></td>
                             <td class="text-right <?= $benefice >= 0 ? 'positive' : 'negative' ?>">
-                                <?= number_format($benefice, 2) ?> €
-                            </td>
-                            <td class="text-right <?= $marge >= 0 ? 'positive' : 'negative' ?>">
-                                <?= number_format($marge, 1) ?> %
+                                <?= number_format($benefice, 2) ?>
                             </td>
                             <td><?= htmlspecialchars($row['livreur'] ?? '') ?></td>
                             <td><?= htmlspecialchars($row['vehicule'] ?? '') ?></td>

@@ -8,16 +8,16 @@ INSERT INTO lvr_zone (nom, pourcentage) VALUES
 
 -- 4.a : 10 véhicules
 INSERT INTO lvr_vehicule (modele, immatriculation) VALUES
-('Toyota Yaris', 'T 1001 AA'),
-('Renault Clio', 'T 1002 BB'),
-('Peugeot 208', 'T 1003 CC'),
-('Hyundai i10', 'T 1004 DD'),
-('Suzuki Swift', 'T 1005 EE'),
-('Dacia Sandero', 'T 1006 FF'),
-('Kia Picanto', 'T 1007 GG'),
-('Ford Fiesta', 'T 1008 HH'),
-('Volkswagen Polo', 'T 1009 II'),
-('Citroën C3', 'T 1010 JJ');
+('Toyota Yaris', '1001 TBA'),
+('Renault Clio', '1002 TBA'),
+('Peugeot 208', '1003 TBB'),
+('Hyundai i10', '1004 TBD'),
+('Suzuki Swift', '1005 TCA'),
+('Dacia Sandero', '1006 TBA'),
+('Kia Picanto', '1007 TBA'),
+('Ford Fiesta', '1008 TBC'),
+('Volkswagen Polo', '1009 TAM'),
+('Citroën C3', '1010 TBC');
 
 -- 4.b : 12 livreurs/chauffeurs
 INSERT INTO lvr_livreur (nom, contact, salaire) VALUES

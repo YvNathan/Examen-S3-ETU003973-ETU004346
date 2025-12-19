@@ -99,9 +99,9 @@
                                     <th>Année</th>
                                 <?php endif; ?>
                                 <th>Livraisons</th>
-                                <th>CA</th>
-                                <th>Coûts</th>
-                                <th>Bénéfice</th>
+                                <th>CA (Ar)</th>
+                                <th>Coûts (Ar)</th>
+                                <th>Bénéfice (Ar)</th>
                             </tr>
                         </thead>
 
@@ -118,9 +118,9 @@
                                     <?php endif; ?>
 
                                     <td><?= number_format($row['nb_livraisons']) ?></td>
-                                    <td><?= number_format($row['ca_total'], 2) ?> €</td>
-                                    <td><?= number_format($row['cout_total'], 2) ?> €</td>
-                                    <td><?= number_format($row['benefice'], 2) ?> €</td>
+                                    <td><?= number_format($row['ca_total'], 2) ?></td>
+                                    <td><?= number_format($row['cout_total'], 2) ?></td>
+                                    <td><?= number_format($row['benefice'], 2) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -135,9 +135,9 @@
                                     <td>TOTAL</td>
                                 <?php endif; ?>
                                 <td><?= number_format($totaux['nb_livraisons'] ?? 0) ?></td>
-                                <td><?= number_format($totaux['ca_total'] ?? 0, 2) ?> €</td>
-                                <td><?= number_format($totaux['cout_total'] ?? 0, 2) ?> €</td>
-                                <td><?= number_format($totaux['benefice'] ?? 0, 2) ?> €</td>
+                                <td><?= number_format($totaux['ca_total'] ?? 0, 2) ?></td>
+                                <td><?= number_format($totaux['cout_total'] ?? 0, 2) ?></td>
+                                <td><?= number_format($totaux['benefice'] ?? 0, 2) ?></td>
                             </tr>
                         </tfoot>
                     </table>
