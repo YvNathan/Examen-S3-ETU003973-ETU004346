@@ -30,6 +30,7 @@ class LivraisonController
             'vehicules' => $modelV->getVehicules(),
             'livreurs'  => $modelL->getLivreurs(),
             'colis'     => $modelC->getColisDisponibles(),
+            'zones'     => $modelZ->getZones(),
             'baseUrl'   => Flight::get('flight.base_url'),
         ];
 
@@ -48,7 +49,8 @@ class LivraisonController
                 $req->coutVehicule,
                 $req->idColis,
                 $req->prixKg,
-                $req->dateLivraison
+                $req->dateLivraison,
+                $req->idZone
             );
 
             $baseUrl = Flight::get('flight.base_url');

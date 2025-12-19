@@ -57,46 +57,31 @@
         <?php endif; ?>
 
         <form action="<?= $base ?>/livraisons/nouveau" method="post">
-          <div class="sections-row">
-            <div class="section">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">Chauffeur</label>
-                  <select name="idLivreur" required>
-                    <option value="">-- Choisir --</option>
-                    <?php if (!empty($livreurs)) : ?>
-                      <?php foreach ($livreurs as $l) : ?>
-                        <option value="<?= $l['id'] ?>"><?= htmlspecialchars($l['nom']) ?></option>
-                      <?php endforeach; ?>
-                    <?php endif; ?>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Véhicule</label>
-                  <select name="idVehicule" required>
-                    <option value="">-- Choisir --</option>
-                    <?php foreach ($vehicules as $v) : ?>
-                      <option value="<?= $v['id'] ?>"><?= htmlspecialchars($v['immatriculation']) ?> - <?= htmlspecialchars($v['modele']) ?></option>
+          <div class="section">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Chauffeur</label>
+                <select name="idLivreur" required>
+                  <option value="">-- Choisir --</option>
+                  <?php if (!empty($livreurs)) : ?>
+                    <?php foreach ($livreurs as $l) : ?>
+                      <option value="<?= $l['id'] ?>"><?= htmlspecialchars($l['nom']) ?></option>
                     <?php endforeach; ?>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Date</label>
-                  <input type="date" name="dateLivraison" required>
-                </div>
+                  <?php endif; ?>
+                </select>
               </div>
-            </div>
-
-            <div class="section">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">Coût véhicule</label>
-                  <input type="number" step="0.01" name="coutVehicule" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Prix par Kg</label>
-                  <input type="number" step="0.01" name="prixKg" required>
-                </div>
+              <div class="form-group">
+                <label class="form-label">Véhicule</label>
+                <select name="idVehicule" required>
+                  <option value="">-- Choisir --</option>
+                  <?php foreach ($vehicules as $v) : ?>
+                    <option value="<?= $v['id'] ?>"><?= htmlspecialchars($v['immatriculation']) ?> - <?= htmlspecialchars($v['modele']) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" name="dateLivraison" required>
               </div>
             </div>
           </div>
@@ -132,6 +117,33 @@
           </div>
 
           <input type="hidden" name="idColis" id="selectedColis" required>
+
+          <div class="section">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Coût véhicule</label>
+                <input type="number" step="0.01" name="coutVehicule" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Prix par Kg</label>
+                <input type="number" step="0.01" name="prixKg" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Zone de livraison</label>
+                <select name="idZone" required>
+                  <option value="">-- Choisir une zone --</option>
+                  <?php if (!empty($zones)) : ?>
+                    <?php foreach ($zones as $z) : ?>
+                      <option value="<?= $z['id'] ?>">
+                        <?= htmlspecialchars($z['nom']) ?> 
+                        (<?= number_format($z['pourcentage'], 2) ?>%)
+                      </option>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
+                </select>
+              </div>
+            </div>
+          </div>
 
           <div class="form-actions">
             <button type="submit" class="submit-btn">Enregistrer la livraison</button>

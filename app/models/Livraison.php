@@ -13,7 +13,7 @@ class Livraison
         $this->db = $db;
     }
 
-    public function creer($idVehicule, $idLivreur, $coutVehicule, $idColis, $prixKg, $dateLivraison)
+    public function creer($idVehicule, $idLivreur, $coutVehicule, $idColis, $prixKg, $dateLivraison, $idZone = null)
     {
         try {
             if ($coutVehicule < 0 || $prixKg < 0) {
@@ -39,8 +39,8 @@ class Livraison
 
             $this->db->beginTransaction();
 
-            $stmtA = $this->db->prepare('INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur) VALUES (?, ?, ?, ?)');
-            $stmtA->execute([$idVehicule, $idLivreur, $coutVehicule, $coutLivreur]);
+            $stmtA = $this->db->prepare('INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur, idZone) VALUES (?, ?, ?, ?, ?)');
+            $stmtA->execute([$idVehicule, $idLivreur, $coutVehicule, $coutLivreur, $idZone]);
             $idAffectation = (int) $this->db->lastInsertId();
 
             $stmtL = $this->db->prepare('INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg) VALUES (?, ?, ?, ?, ?)');

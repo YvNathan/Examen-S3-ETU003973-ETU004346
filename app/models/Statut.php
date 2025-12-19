@@ -32,7 +32,7 @@ class Statut
         }
       }
 
-      $calcStmt = $this->db->prepare("SELECT l.prixKg, c.poids_Kg FROM lvr_livraison l JOIN lvr_colis c ON c.id = l.idColis WHERE l.id = ?");
+      $calcStmt = $this->db->prepare("SELECT l.prixKg, c.poids_Kg, z.pourcentage FROM lvr_livraison l JOIN lvr_colis c ON c.id = l.idColis JOIN lvr_affectation a ON a.id = l.idAffectation LEFT JOIN lvr_zone z ON z.id = a.idZone WHERE l.id = ?");
       $calcStmt->execute([$idLivraison]);
       $calc = $calcStmt->fetch();
       if (!$calc) {
@@ -40,10 +40,12 @@ class Statut
       }
       $prixKg = (float) $calc['prixKg'];
       $poids = (float) $calc['poids_Kg'];
+      $pourcentage = (float) ($calc['pourcentage'] ?? 0);
       if ($poids <= 0) {
         throw new \Exception('Poids du colis invalide');
       }
-      $prixTotal = $prixKg * $poids;
+      $prixBase = $prixKg * $poids;
+      $prixTotal = $prixBase * (1 + $pourcentage / 100);
 
       $this->db->beginTransaction();
       try {
