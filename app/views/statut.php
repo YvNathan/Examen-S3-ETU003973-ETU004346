@@ -76,14 +76,16 @@
                             <div class="actions">
                                 <form id="form-confirmer-<?= $row['idLivraison'] ?>"
                                       method="post"
-                                      action="<?= $base ?>/statut/achever">
+                                      action="<?= $base ?>/statut/achever"
+                                      class="action-form">
                                     <input type="hidden"
                                            name="idLivraison"
                                            value="<?= htmlspecialchars($row['idLivraison'] ?? '') ?>">
                                     <button type="submit" class="btn">Confirmer</button>
                                 </form>
                                 <form method="post"
-                                      action="<?= $base ?>/statut/annuler">
+                                      action="<?= $base ?>/statut/annuler"
+                                      class="action-form">
                                     <input type="hidden"
                                            name="idLivraison"
                                            value="<?= htmlspecialchars($row['idLivraison'] ?? '') ?>">
