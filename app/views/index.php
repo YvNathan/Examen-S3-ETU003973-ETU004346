@@ -75,7 +75,7 @@
 </main>
 </div>
     <footer class="footer-main">
-        &copy; 2025 ETU003973-ETU004346 — Tous droits réservés
+        &copy; 2025 ETU003973-ETU004346
     </footer>
 </body>
 </html>
