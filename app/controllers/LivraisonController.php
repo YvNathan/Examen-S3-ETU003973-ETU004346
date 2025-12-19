@@ -54,7 +54,7 @@ class LivraisonController
             );
 
             $baseUrl = Flight::get('flight.base_url');
-            $this->app->redirect( BASE_URL . '/livraisons/nouveau?success=1');
+            $this->app->redirect('/livraisons/nouveau?success=1');
 
         } catch (\Exception $e) {
             Flight::render('form', [

@@ -12,7 +12,7 @@ class Zone
 
     public function getZones()
     {
-        $stmt = $this->db->query("SELECT * FROM lvr_zone ORDER BY nom");
+        $stmt = $this->db->query("SELECT * FROM lvr_zone WHERE nom != 'Inexistante' ORDER BY nom");
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 

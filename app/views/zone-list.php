@@ -56,7 +56,7 @@ error_reporting(E_ALL);
                     <?php endif; ?>
                 <?php endif; ?>
                 <div style="margin-bottom: 20px;">
-                    <a class="btn btn-primary" href="/zones/add">Ajouter une zone</a>
+                    <a class="btn btn-primary" href="<?= $base ?>/zones/add">Ajouter une zone</a>
                 </div>
                 <table class="table">
                     <thead>
@@ -81,7 +81,7 @@ error_reporting(E_ALL);
                                     <td><?= htmlspecialchars($zone['nom']) ?></td>
                                     <td><?= htmlspecialchars(number_format($zone['pourcentage'], 2)) ?> %</td>
                                     <td>
-                                        <a class="btn btn-secondary" href="/zones/edit/<?= $zone['id'] ?>">
+                                        <a class="btn btn-secondary" href="<?= $base ?>/zones/edit/<?= $zone['id'] ?>">
                                             Modifier
                                         </a>
                                         <a class="btn btn-danger" href="#"
@@ -99,7 +99,7 @@ error_reporting(E_ALL);
                 function confirmDeleteZone(id) {
                     const code = prompt('⚠️ Pour supprimer cette zone, entrez le code de confirmation :\n(Toute affectation utilisant cette zone sera marquée comme "inexistante")');
                     if (code === '9999') {
-                        window.location.href = '/zones/delete/' + id;
+                        window.location.href = '<?= $base ?>/zones/delete/' + id;
                         return true;
                     } else if (code !== null) {
                         alert('❌ Code incorrect. La suppression a été annulée.');
