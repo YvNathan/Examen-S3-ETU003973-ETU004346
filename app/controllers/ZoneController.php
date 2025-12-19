@@ -13,18 +13,16 @@ class ZoneController
         $this->app = $app;
     }
 
-    // Liste des zones
     public function index()
     {
         $model = new Zone($this->app->db());
         $zones = $model->getZones();
-
-        $this->app->render('zone/zone-list', ['zones' => $zones]);
+        $this->app->render('zone-list', ['zones' => $zones, 'message' => '']);
     }
 
-    // Formulaire ajout
     public function add()
     {
+        $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nom = trim($_POST['nom'] ?? '');
             $pourcentage = floatval($_POST['pourcentage'] ?? 0);
@@ -33,16 +31,18 @@ class ZoneController
                 $model = new Zone($this->app->db());
                 $model->add($nom, $pourcentage);
                 $this->app->redirect('/zones');
+            } else {
+                $message = 'Le nom est obligatoire.';
             }
         }
 
-        $this->app->render('zone/zone-form', [
+        $this->app->render('zone-form', [
             'action' => 'add',
-            'zone' => ['nom' => '', 'pourcentage' => 0]
+            'zone' => ['nom' => $nom ?? '', 'pourcentage' => $pourcentage ?? 0],
+            'message' => $message
         ]);
     }
 
-    // Édition
     public function edit($id)
     {
         $model = new Zone($this->app->db());
@@ -52,6 +52,7 @@ class ZoneController
             $this->app->redirect('/zones');
         }
 
+        $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nom = trim($_POST['nom'] ?? '');
             $pourcentage = floatval($_POST['pourcentage'] ?? 0);
@@ -59,20 +60,38 @@ class ZoneController
             if ($nom !== '') {
                 $model->update($id, $nom, $pourcentage);
                 $this->app->redirect('/zones');
+            } else {
+                $message = 'Le nom est obligatoire.';
             }
         }
 
-        $this->app->render('zone/zone-form', [
+        $this->app->render('zone-form', [
             'action' => 'edit',
-            'zone' => $zone
+            'zone' => $zone,
+            'message' => $message
         ]);
     }
 
-    // Suppression
     public function delete($id)
     {
         $model = new Zone($this->app->db());
+
+        // Réaffectation des affectations (tu mets idZone = 6 pour "inexistant")
+        $this->app->db()->prepare("UPDATE lvr_affectation SET idZone = 6 WHERE idZone = ?")
+                       ->execute([$id]);
+
+        // Optionnel : réaffecter les colis si jamais tu en avais (mais tu n'as plus idZone dans colis)
+        // $model->reaffectColisToInexistant($id);
+
+        // Suppression de la zone
         $model->delete($id);
-        $this->app->redirect('/zones');
+
+        // Recharger la liste et afficher un message de succès
+        $zones = $model->getZones();
+
+        $this->app->render('zone-list', [
+            'zones' => $zones,
+            'message' => 'Zone supprimée avec succès.'
+        ]);
     }
 }

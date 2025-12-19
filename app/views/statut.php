@@ -32,6 +32,7 @@
         <a class="sidebar__link" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>
         <a class="sidebar__link" href="<?= $base ?>/benefices/details">Détails des livraisons</a>
+         <a class="sidebar__link" href="<?= $base ?>/zones">Zones de livraison</a>
         
     </aside>
 

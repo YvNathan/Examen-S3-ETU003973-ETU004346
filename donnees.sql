@@ -4,7 +4,9 @@ INSERT INTO lvr_zone (nom, pourcentage) VALUES
 ('Zone Anosizato', 12.50),
 ('Zone Ivato', 12.50),
 ('Zone Centre-Ville', 0.00),
-('Zone Ankorondrano', 0.00);
+('Zone Ankorondrano', 0.00),
+('Zone inexistante', 0.00);
+
 
 -- 4.a : 10 véhicules
 INSERT INTO lvr_vehicule (modele, immatriculation) VALUES
@@ -19,7 +21,6 @@ INSERT INTO lvr_vehicule (modele, immatriculation) VALUES
 ('Volkswagen Polo', 'T 1009 II'),
 ('Citroën C3', 'T 1010 JJ');
 
--- 4.b : 12 livreurs/chauffeurs
 INSERT INTO lvr_livreur (nom, contact, salaire) VALUES
 -- Groupe 15000 Ar
 ('Rakoto Andry', '034 11 111 11', 15000.00),
