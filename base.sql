@@ -45,6 +45,7 @@ CREATE TABLE
         coutVehicule DECIMAL(10, 2),
         coutLivreur DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
         idZone INT NULL,
+        pourcentageZone DECIMAL(10, 2) DEFAULT 0.00,
         FOREIGN KEY (idVehicule) REFERENCES lvr_vehicule (id),
         FOREIGN KEY (idLivreur) REFERENCES lvr_livreur (id),
         FOREIGN KEY (idZone) REFERENCES lvr_zone (id)
@@ -121,7 +122,7 @@ SELECT
     c.descrip AS colis,
     c.poids_Kg,
     l.prixKg,
-    l.prixKg * c.poids_Kg * (1 + COALESCE(z.pourcentage, 0) / 100) AS prixLivraisonAvecSupplement,
+    l.prixKg * c.poids_Kg * (1 + COALESCE(a.pourcentageZone, 0) / 100) AS prixLivraisonAvecSupplement,
     a.coutLivreur,
     a.coutVehicule,
     p.prix AS chiffreAffaires,
@@ -130,7 +131,7 @@ SELECT
     lv.nom AS livreur,
     v.immatriculation AS vehicule,
     z.nom AS zone_livraison,
-    z.pourcentage AS supplement_pourcentage
+    a.pourcentageZone AS supplement_pourcentage
 FROM
     lvr_livraison l
     JOIN lvr_colis c ON c.id = l.idColis
@@ -270,7 +271,7 @@ SELECT
     c.poids_Kg,
     l.prixKg,
     z.nom AS zone_livraison,
-    z.pourcentage AS supplement_pourcentage,
+    a.pourcentageZone AS supplement_pourcentage,
     a.coutVehicule,
     a.coutLivreur,
     p.prix AS chiffreAffaires,

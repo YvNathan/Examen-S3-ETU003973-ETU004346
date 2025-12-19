@@ -37,10 +37,20 @@ class Livraison
                 throw new Exception('Le colis est déjà associé à une livraison');
             }
 
+            $pourcentageZone = 0;
+            if ($idZone !== null) {
+                $stmtZone = $this->db->prepare('SELECT pourcentage FROM lvr_zone WHERE id = ?');
+                $stmtZone->execute([$idZone]);
+                $zone = $stmtZone->fetch(\PDO::FETCH_ASSOC);
+                if ($zone) {
+                    $pourcentageZone = (float) $zone['pourcentage'];
+                }
+            }
+
             $this->db->beginTransaction();
 
-            $stmtA = $this->db->prepare('INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur, idZone) VALUES (?, ?, ?, ?, ?)');
-            $stmtA->execute([$idVehicule, $idLivreur, $coutVehicule, $coutLivreur, $idZone]);
+            $stmtA = $this->db->prepare('INSERT INTO lvr_affectation (idVehicule, idLivreur, coutVehicule, coutLivreur, idZone, pourcentageZone) VALUES (?, ?, ?, ?, ?, ?)');
+            $stmtA->execute([$idVehicule, $idLivreur, $coutVehicule, $coutLivreur, $idZone, $pourcentageZone]);
             $idAffectation = (int) $this->db->lastInsertId();
 
             $stmtL = $this->db->prepare('INSERT INTO lvr_livraison (idAffectation, idColis, adresseDepart, dateLivraison, prixKg) VALUES (?, ?, ?, ?, ?)');
