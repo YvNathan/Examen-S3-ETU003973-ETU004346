@@ -18,7 +18,7 @@ $router->group('', function (Router $router) use ($app) {
 		$app->render('landing');
 	});
 
-	$router->get('/app', function () use ($app) {
+	$router->get('/accueil', function () use ($app) {
 		$app->render('index');
 	});
 

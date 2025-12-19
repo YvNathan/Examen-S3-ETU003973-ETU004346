@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+
 class Benefice
 {
     private $db;

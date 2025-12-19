@@ -46,7 +46,7 @@ if (empty($app) === true) {
 $app->path(__DIR__ . $ds . '..' . $ds . '..');
 
 // Core config variables
-// $app->set('flight.base_url', '/ETU003973/Prepa_Examen_S3_ETU003973_ETU004346');           // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
+// $app->set('flight.base_url', '/ETU003973/Examen_S3_ETU003973_ETU004346');           // Base URL for your app. Change if app is in a subdirectory (e.g., '/myapp/')
 $app->set('flight.base_url', '/');
 $app->set('flight.case_sensitive', false);    // Set true for case sensitive routes. Default: false
 $app->set('flight.log_errors', true);         // Log errors to file. Recommended: true in production
@@ -54,7 +54,12 @@ $app->set('flight.handle_errors', false);     // Let Tracy handle errors if fals
 $app->set('flight.views.path', __DIR__ . $ds . '..' . $ds . 'views'); // Path to views/templates
 $app->set('flight.views.extension', '.php');  // View file extension (e.g., '.php', '.latte')
 $app->set('flight.content_length', false);    // Send content length header. Usually false unless required by proxy
-define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
+
+$baseUrl = $app->get('flight.base_url');
+if (empty($baseUrl)) {
+	$baseUrl = dirname($_SERVER['SCRIPT_NAME']);
+}
+define('BASE_URL', rtrim($baseUrl, '/'));
 
 
 // Generate a CSP nonce for each request and store in $app
@@ -69,11 +74,16 @@ return [
 	 *         Database Settings          *
 	 **************************************/
 	'database' => [
-		 //MySQL Example:
-		 'host'     => 'localhost:3306',      // Database host (e.g., 'localhost', 'db.example.com')
-		 'dbname'   => 'examenS3',   // Database name (e.g., 'flightphp')
-		 'user'     => 'root',  // Database user (e.g., 'root')
-		 'password' => '',  // Database password (never commit real passwords)
+		//MySQL Example:
+		// 'host'     => '172.16.4.245',      // Database host (e.g., 'localhost', 'db.example.com')
+		// 'dbname'   => 'db_s2_ETU003973',   // Database name (e.g., 'flightphp')
+		// 'user'     => 'ETU003973',  // Database user (e.g., 'root')
+		// 'password' => 'easPC308',  // Database password (never commit real passwords)
+
+		'host'     => 'localhost:3306',      // Database host (e.g., 'localhost', 'db.example.com')
+		'dbname'   => 'examenS3',   // Database name (e.g., 'flightphp')
+		'user'     => 'root',  // Database user (e.g., 'root')
+		'password' => '',
 
 		// SQLite Example:
 		// 'file_path' => __DIR__ . $ds . '..' . $ds . 'database.sqlite', // Path to SQLite file

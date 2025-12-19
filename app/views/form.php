@@ -5,23 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nouvelle livraison</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <?php
+  $basePath = rtrim($baseUrl ?? BASE_URL ?? '', '/');
+  if ($basePath === '/') {
+    $basePath = '';
+  }
+  $base = htmlspecialchars($basePath, ENT_QUOTES);
+  ?>
+  <link rel="stylesheet" href="<?= $base ?>/assets/styles.css">
  
   </style>
 </head>
 
 <body class="app-shell">
-  <?php
-  $base = rtrim($baseUrl ?? '', '/');
-  if ($base === '/') {
-    $base = '';
-  }
-  $base = htmlspecialchars($base, ENT_QUOTES);
-  ?>
-
   <header class="topbar">
     <div class="topbar__inner">
-      <div class="topbar__brand"><a href="<?= $base ?: '/app' ?>"></a></div>
+      <div class="topbar__brand"><a href="<?= $base ?: '/accueil' ?>"></a></div>
       <nav class="topbar__actions">
         <a class="topbar__link" href="<?= $base ?>/livraisons/nouveau">+ Nouvelle livraison</a>
         <a class="topbar__link" href="<?= $base ?>/benefices">Rapport bénéfices</a>
@@ -32,7 +31,7 @@
   <div class="app-grid">
     <aside class="sidebar">
       <div class="sidebar__title">Navigation</div>
-      <a class="sidebar__link" href="<?= $base ?: '/app' ?>">Accueil</a>
+      <a class="sidebar__link" href="<?= $base ?: '/accueil' ?>">Accueil</a>
       <a class="sidebar__link" href="<?= $base ?>/statut">Statuts des livraisons</a>
       <a class="sidebar__link is-active" href="<?= $base ?>/livraisons/nouveau">Créer une livraison</a>
       <a class="sidebar__link" href="<?= $base ?>/benefices">Rapport de bénéfices</a>

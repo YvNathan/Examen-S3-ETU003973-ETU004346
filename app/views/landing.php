@@ -6,7 +6,7 @@
     <title>Suivi de Livraisons</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/landing.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/landing.css">
 </head>
 
 <body>
@@ -28,16 +28,17 @@
 <section class="hero">
     <div class="container">
         <div class="hero-content">
+            <p><?= BASE_URL ?></p>
             <h1>Suivi de Livraisons</h1>
             <p>
                 Gérez et suivez vos livraisons en temps réel avec une plateforme
                 moderne, fiable et intuitive pour optimiser votre logistique.
             </p>
-            <a href="/app" class="cta">Accéder à l'application</a>
+            <a href="<?= BASE_URL ?>/accueil" class="cta">Accéder à l'application</a>
         </div>
 
         <div class="hero-illustration">
-            <img src="/assets/images/logo.png"
+            <img src="<?= BASE_URL ?>/assets/images/logo.png"
                  alt="Illustration suivi de livraison">
         </div>
     </div>

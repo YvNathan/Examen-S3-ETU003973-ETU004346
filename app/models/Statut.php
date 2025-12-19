@@ -19,15 +19,57 @@ class Statut
 
     public function acheverLivraison($idLivraison, $datePaiement)
     {
-      $sql = "CALL p_gestion_statut(?, ?)";
-      $stmt = $this->db->prepare($sql);
-      $stmt->execute([$idLivraison, $datePaiement]);
+      $currentStmt = $this->db->prepare("SELECT idStatut, dateStatut FROM lvr_livraisonStatut WHERE idLivraison = ? ORDER BY dateStatut DESC LIMIT 1");
+      $currentStmt->execute([$idLivraison]);
+      $current = $currentStmt->fetch();
+      if ($current) {
+        $statusId = (int) $current['idStatut'];
+        if ($statusId === 2) {
+          throw new \Exception('Livraison déjà effectuée');
+        }
+        if ($statusId === 3) {
+          throw new \Exception('Livraison annulée');
+        }
+      }
+
+      $calcStmt = $this->db->prepare("SELECT l.prixKg, c.poids_Kg FROM lvr_livraison l JOIN lvr_colis c ON c.id = l.idColis WHERE l.id = ?");
+      $calcStmt->execute([$idLivraison]);
+      $calc = $calcStmt->fetch();
+      if (!$calc) {
+        throw new \Exception('Livraison introuvable');
+      }
+      $prixKg = (float) $calc['prixKg'];
+      $poids = (float) $calc['poids_Kg'];
+      if ($poids <= 0) {
+        throw new \Exception('Poids du colis invalide');
+      }
+      $prixTotal = $prixKg * $poids;
+
+      $this->db->beginTransaction();
+      try {
+        $payStmt = $this->db->prepare("INSERT INTO lvr_paiement (idLivraison, prix, datePaiement) VALUES (?, ?, ?)");
+        $payStmt->execute([$idLivraison, $prixTotal, $datePaiement]);
+
+        $statusStmt = $this->db->prepare("INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut) VALUES (?, 2, ?)");
+        $statusStmt->execute([$idLivraison, $datePaiement]);
+
+        $this->db->commit();
+      } catch (\Exception $e) {
+        $this->db->rollBack();
+        throw $e;
+      }
     }
 
     public function annulerLivraison($idLivraison)
     {
-      $sql = "UPDATE lvr_livraisonStatut SET idStatut = 3, dateStatut = CURDATE() WHERE idLivraison = ? AND idStatut = 1";
-      $stmt = $this->db->prepare($sql);
+      $currentStmt = $this->db->prepare("SELECT idStatut FROM lvr_livraisonStatut WHERE idLivraison = ? ORDER BY dateStatut DESC LIMIT 1");
+      $currentStmt->execute([$idLivraison]);
+      $current = $currentStmt->fetch();
+      if ($current && (int) $current['idStatut'] === 2) {
+        throw new \Exception('Impossible d\'annuler une livraison déjà effectuée');
+      }
+
+      $stmt = $this->db->prepare("INSERT INTO lvr_livraisonStatut (idLivraison, idStatut, dateStatut) VALUES (?, 3, NOW())");
       $stmt->execute([$idLivraison]);
     }
 

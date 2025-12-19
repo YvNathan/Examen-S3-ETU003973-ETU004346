@@ -1,4 +1,6 @@
 RewriteEngine On
+RewriteBase /ETU003973/Examen_S3_ETU003973_ETU004346/
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
